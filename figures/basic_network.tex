@@ -1,0 +1,9 @@
+\begin{neuralnetwork}[height=5]
+  \tikzstyle{input neuron}=[neuron, draw, fill=white]
+  \tikzstyle{hidden neuron}=[neuron, draw, fill=white]
+  \tikzstyle{output neuron}=[neuron, draw, fill=white]
+  \tikzstyle{link} = [->, shorten <=0pt, node distance=\nn@layerspacing, thin, draw=black];
+  \inputlayer[count=4, bias=false, title=Input\\layer]
+  \hiddenlayer[count=5, bias=false, title=Hidden\\layer] \linklayers
+  \outputlayer[count=3, title=Output\\layer] \linklayers
+\end{neuralnetwork}

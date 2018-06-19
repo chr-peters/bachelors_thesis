@@ -1,0 +1,47 @@
+\chapter{Deep Learning Fundamentals}
+
+\section{Artificial Neural Networks}
+
+Artificial neural networks (ANNs) are a class of machine learning algorithms
+that are loosely inspired by the structure of biological nervous
+systems.
+To be precise, each ANN consists of a collection of artificial neurons
+that are connected with each other. The neurons are able to exchange
+information along their connections.
+A common way to arrange artificial neurons within a network is to organize
+them in layers as depicted in \fref{fig:basic-network}.
+\begin{figure}[h]
+  \centering
+  \resizebox{0.75\textwidth}{!}{\input{../figures/basic_network}}
+  \caption{The structure of a simple ANN. The nodes represent the
+    neurons, the edges represent their connections, also indicating
+    the flow of information.}
+  \label{fig:basic-network}
+\end{figure}
+
+When an artificial neuron receives a signal on some of its
+incoming connections, it may elect to become active.\footnote{The
+  details of this
+  process are further illustrated in \fref{sec:artificial-neurons}.}
+In this state it also influences all neurons it has an outgoing
+connection to by passing a signal along their
+channel. Those other neurons in turn may also elect to become
+activated - this way a signal can propagate through the network along
+the connecting edges.
+
+Usually, each ANN consists of at least one layer of neurons that is
+responsible for receiving signals from the environment - we call this
+an \textit{input layer} (see \fref{fig:basic-network}). When these neurons
+receive a signal from the environment, they propagate it to their
+connected neighbors in the next layer. This process repeats until the
+\textit{output layer} is reached. The neurons in this layer represent the
+output of the whole network. Each layer in between is called a \textit{hidden
+layer} because there is no direct communication between the neurons in
+this layer and the environment.
+
+\subsection{Modeling Artificial Neurons}
+\label{sec:artificial-neurons}
+
+\section{The Multilayer Perceptron}
+
+\section{Deep Networks}

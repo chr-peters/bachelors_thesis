@@ -26,7 +26,7 @@ incoming connections, it may elect to become active.\footnote{The
 In this state it also influences all neurons it has an outgoing
 connection to by passing a signal along their
 channel. Those other neurons in turn may also elect to become
-activated - this way a signal can propagate through the network along
+active - this way a signal can propagate through the network along
 the connecting edges.
 
 Usually, each ANN consists of at least one layer of neurons that is
@@ -39,8 +39,38 @@ output of the whole network. Each layer in between is called a \textit{hidden
 layer} because there is no direct communication between the neurons in
 this layer and the environment.
 
+The goal behind this procedure usually is to convert an input signal
+into a meaningful output by feeding it through the network. If the
+network is able to detect relevant features or patterns in the input
+signal, it can be used to perform tasks such as classification or
+regression (i.e. approximate discrete or continuous functions).
+In order for this to be possible, some kind of learning has to take
+place which enables the network to capture the essence of the data it
+is confronted with. We will take a further look at these aspects as
+well as the mathematical model of a neural network in the following
+sections.
+
 \subsection{Modeling Artificial Neurons}
 \label{sec:artificial-neurons}
+To fully understand how each neuron processes the signals it receives,
+it is necessary to develop a mathematical model that describes all the
+operations taking place. The following descriptions are partially
+based on the explanations that are provided in \cite{Haykin}.\footnote{See
+  chapter I.3: \textit{Models of a Neuron} for more details.}
+As shown in \fref{fig:single-neuron}, each artificial neuron
+basically consists of three components:
+\begin{enumerate}
+  \item \textbf{A set of weighted inputs:} asdfsadf
+  \item \textbf{A summation unit:} asdfsadf
+  \item \textbf{An activation function:} asdfsdf
+\end{enumerate}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/single_neuron}
+  \caption{The components of a single artificial neuron.}
+  \label{fig:single-neuron}
+\end{figure}
+
 
 \section{The Multilayer Perceptron}
 

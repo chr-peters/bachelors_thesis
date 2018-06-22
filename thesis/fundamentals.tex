@@ -60,16 +60,59 @@ based on the explanations that are provided in \cite{Haykin}.\footnote{See
 As shown in \fref{fig:single-neuron}, each artificial neuron
 basically consists of three components:
 \begin{enumerate}
-  \item \textbf{A set of weighted inputs:} asdfsadf
-  \item \textbf{A summation unit:} asdfsadf
-  \item \textbf{An activation function:} asdfsdf
+  \item \textbf{A set of weighted inputs:} Each connection that is
+    leading into the neuron has a weight \(w_{kj}\) associated with it
+    where \(k\) denotes the neuron in question and \(j\) denotes the
+    index of the neuron that delivers its input to the current neuron
+    \(k\).\footnote{There might arise the question why the indexing of
+    a weight from neuron \(j\) to neuron \(k\) is \(w_{kj}\) and
+    \textit{not} \(w_{jk}\). This is the case because the weights are
+    usually stored in matrices where each row corresponds to a
+    neuron \(k\) and each column corresponds to an input \(j\) which
+    allows for much faster computations by heavily utilizing
+    matrix-multiplication.} The signal that
+    passes the connection is multiplied by the
+    related weight of that connection before arriving at the next
+    component.
+  \item \textbf{A summation unit:} This component adds up all the
+    weighted signals that arrive at the neuron as well as a bias value
+    \(b_k\) that is independent of the inputs.
+  \item \textbf{An activation function:} The activation function
+    \(\phi(\cdot)\) takes the output of the summation unit and applies
+    a transformation to it that is usually non-linear. The value of
+    the activation function is the output of the neuron which will
+    travel further through the network alongside the corresponding
+    connections. In \fref{sec:activation-functions}, a more
+    detailed explanation of activation functions as well as some
+    commonly used examples will be provided.
 \end{enumerate}
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{../figures/single_neuron}
-  \caption{The components of a single artificial neuron.}
+  \caption{The components of a single artificial neuron. This neuron
+    \(k\) receives three input signals that are first multiplied by
+    the associated weights, summed up including a bias and then fed
+    into an activation function that will determine the ouput signal.}
   \label{fig:single-neuron}
 \end{figure}
+As a result, the output of the summation unit of a particular
+neuron \(k\) with \(n\) input signals \(x_j\) can be described by the
+following equation:
+\begin{equation}
+  z_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}} + b_k
+\end{equation}
+where \(b_k\) denotes the bias term of neuron \(k\) and \(z_k\) describes the
+result of the summation unit.
+
+As a consequence, the output signal \(y_k\) of neuron \(k\) can be computed by
+applying the activation function \(\phi(\cdot)\) to the output of the
+summation unit which can be described by the following expression:
+\begin{equation}
+  y_k = \phi(z_k)
+\end{equation}
+
+\subsection{Activation Functions}
+\label{sec:activation-functions}
 
 
 \section{The Multilayer Perceptron}

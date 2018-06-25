@@ -20,7 +20,7 @@ them in layers as depicted in \fref{fig:basic-network}.
   \label{fig:basic-network}
 \end{figure}
 
-When an artificial neuron receives a signal on some of its
+When an artificial neuron receives signals on some of its
 incoming connections, it may elect to become active based on the input
 it collects.\footnote{The
   details of this
@@ -83,10 +83,11 @@ basically consists of three components:
   \item \textbf{A summation unit:} This component adds up all the
     weighted signals that arrive at the neuron as well as a constant
     bias value
-    \(b_k\) that is independent of the inputs.
+    \(b_k\) that is independent of the inputs. The reason for adding
+    the bias term is explained in \fref{sec:bias}.
   \item \textbf{An activation function:} The activation function
-    \(\phi(\cdot)\) takes the output of the summation unit and applies
-    a transformation to it that is usually non-linear. The value of
+    \(\phi(\cdot)\) applies a transformation to the output of the
+    summation unit that is usually non-linear. The value of
     the activation function is the output of the neuron which will
     travel further through the network alongside the corresponding
     connections. In \fref{sec:activation-functions}, a more
@@ -107,6 +108,7 @@ summation unit of a particular
 neuron \(k\) with \(n\) input signals \(x_j\) can be described by the
 following formula:
 \begin{equation}
+  \label{eq:input}
   z_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}} + b_k
 \end{equation}
 where \(b_k\) denotes the bias term of neuron \(k\) and \(z_k\) describes the
@@ -134,6 +136,7 @@ functions will be presented that is based on the descriptions found in
   in chapter two.}
 
 \paragraph{The Sigmoid Function}
+\label{sec:sigmoid}
 This activation function transforms an input \(z\) into a range between 0
 and 1 based on the following equation:
 \begin{equation}
@@ -219,7 +222,101 @@ clear-cut values.\footnote{Imagine the \(z_i\) inputs of the output
   for a nice explanation and the source of this example.}
 
 \subsection{The Role of the Bias Value}
+\label{sec:bias}
+There still remains the question why in each artificial neuron there
+is a bias value \(b_k\) added to the weighted sum of the inputs. The
+reason for this is related to the activation function: The bias term
+acts like a parameter that determines how to shift the activation
+function along the x-axis. We already know from \fref{eq:input} that
+for a neuron \(k\) with \(n\) inputs the toal input signal \(z_k\)
+adds up to:
+\begin{equation*}
+  z_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}} + b_k
+\end{equation*}
+Let us denote the weighted sum of the input signals as a separate
+value \(a_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}}\) that describes the raw
+input of the neuron. This means that \(z_k
+= a_k + b_k\) and using the sigmoid function (see \fref{sec:sigmoid}) as an example to
+demonstrate the effects of the bias value, we can slightly rewrite it as
+\begin{equation*}
+  \phi(a_k) = \frac{1}{1+e^{-(a_k+b_k)}}
+\end{equation*}
+also setting \(\theta = 1\) for demonstration purposes. Plotting the
+activation function for
+different values of \(b_k\) immediately reveals the effect of the bias
+value as a shift-parameter which can be seen in \fref{fig:bias}.
+\begin{figure}[h]
+  \centering
+  \input{../figures/bias}
+  \caption{The sigmoid activation function plotted for different bias values.}
+  \label{fig:bias}
+\end{figure}
 
-\section{The Backpropagation Algorithm}
+What this shift means is that the bias term acts like a threshold that
+has to be overcome in order for the neuron to become active. Positive
+bias values lead to activity even when the raw input \(a_k\) is still
+negative and negative bias values require bigger input signals in
+order for the neuron to fire.
+
+\section{Training a Neural Network to Perform Classification}
+
+After establishing a mathematical model that helps us to describe a
+neural network, there is still one problem to be solved: How to train
+the network to be able to successfully perform tasks such as
+classification? In order to figure this out, we will first take a look at
+classification tasks in general and then explore how to set up and
+train a neural network to perform classification.
+
+\subsection{Classification}
+
+The basis of a classification task is usually formed by a dataset that
+consists of features as well as labels. The goal of the classification
+algorithm is to predict the label of an instance of the dataset only
+based its features. In order to achieve this, the classifier first has
+to build a model based on a training dataset which is called
+\textit{training}. In the next step, the classifier is presented with
+some new examples that it did not see during training. The classifier
+is tested on these new examples to estimate its performance and to see
+if it was able to learn any concepts from the data, i.e. to
+\textit{generalize}. This phase is also
+called \textit{testing}. Because classification requires pre-labeled
+instances and the classifier acts like a learner who learns from a
+teacher, classification is an example of a broader domain that is called
+\textit{supervised learning}.
+
+\subsubsection{Evaluating a Classifier}
+
+In order to find out how well a classifier generalizes after training,
+the results of the testing phase can be entered into a
+\textit{confusion matrix} that is structured as shown in \fref{fig:confusion-matrix}.
+\begin{figure}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Class Positive\\(Predicted)} & \thead{Class Negative\\(Predicted)} \\
+    \hline
+    \thead{Class Positive\\(Actual)} & True positives (TP) & False
+    negatives (FN) \\
+    \hline
+    \thead{Class Negative\\(Actual)} & False positives (FP) & True
+    negatives (TN) \\
+    \hline
+  \end{tabular}
+  \caption{The structure of a confusion matrix for a
+    classification task with two classes ``positive'' and
+    ``negative''.}
+  \label{fig:confusion-matrix}
+\end{figure}
+
+Each entry in this matrix describes how often the
+classifier was presented with an example of the row-class during testing and
+predicted that the example belongs to the column-class. The resulting
+measurements of true positives, true negatives, false positives and
+false negatives can be used to compute the following evaluation
+metrics:\footnote{A collection of these metrics can also be found in
+  \cite{Patterson}.}
+
+\subsection{Network Architecture for Classification}
 
 \section{Deep Networks}

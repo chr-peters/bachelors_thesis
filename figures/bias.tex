@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      xlabel={Raw input \(a_k\)},
+      ylabel={Activation \(y\)},
+      legend style={
+        at={(0.05, 0.95)},
+        anchor=north west
+      }
+    ]
+    \addplot[green, domain=-10:10, samples=400]{1/(1+exp(-(x+5)))};
+    \addplot[blue, domain=-10:10, samples=400]{1/(1+exp(-x))};
+    \addplot[red, domain=-10:10, samples=400]{1/(1+exp(-(x-5)))};
+    \legend{\(b_k = 5\), \(b_k = 0\), \(b_k = -5\)}
+  \end{axis}
+\end{tikzpicture}

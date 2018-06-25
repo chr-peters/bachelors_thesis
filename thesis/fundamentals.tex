@@ -173,16 +173,50 @@ values being set to zero, the ReLU function is also non-linear when
 taking its whole domain into account. This is an important concept
 because non-linear activation functions are essential for a network to
 learn complex relationships. Another benefit of the ReLU function is
-that its derivative is either 1 or 0. This will be important when
+that its derivative is either 1 or 0. This will turn out to be important when
 looking into the training of a neural network. Because of all these benefits,
 ReLUs are one of the state of the art activation functions in deep
-neural networks. A plot of the ReLU function is given in \fref{fig:relu}.
+neural networks. A plot of the ReLU function is presented in \fref{fig:relu}.
 \begin{figure}[h]
   \centering
   \input{../figures/relu_function}
   \caption{The ReLU activation function.}
   \label{fig:relu}
 \end{figure}
+
+\paragraph{The Softmax Activation Function}
+This activation function is usually applied to the output neurons of
+a network. When a neural network is used to perform classification
+tasks, each output neuron is commonly associated with a specific
+class. In classification tasks it is highly desirable to assign a
+probability to each class that represents how likely it is that the
+input data belongs to that class. The softmax activation function is
+used to achieve this by setting up the output neurons to represent a
+probability distribution over all possible classes.
+In an output layer consisting of \(n\) output neurons, the softmax
+function for each neuron \(i\) of that layer can be described by the
+following equation, where \(z_i\) denotes the summation units' output of
+the \(i\)'th neuron:
+\begin{equation}
+  \phi(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{n}{e^{z_j}}}
+\end{equation}
+The softmax activation function represents -- loosely speaking -- the
+percentage of the current neurons activation with respect to the compound
+activation of all neurons in the layer.
+
+There might arise the question why each input \(z_i\) is first fed
+into the exponential function \(e^x\) before translating the
+activations into probabilities. This is done to further amplify the
+strongest signals and attenuate the weaker ones which results in more
+clear-cut values.\footnote{Imagine the \(z_i\) inputs of the output
+  layer are given by the following vector: \((2, 4, 2, 1)^T\). If we
+  just normalize these values to obtain a probability for each neuron,
+  we get \((0.22, 0.44, 0.22, 0.11)^T\). Using the exponential
+  function first, we roughly get \((0.1, 0.75, 0.1, 0.05)^T\) which
+  amplifies the most likely outcome and attenuates the less likely
+  values. See
+  \url{https://datascience.stackexchange.com/questions/23159/in-softmax-classifier-why-use-exp-function-to-do-normalization}
+for a nice explanation and the source of this example.}
 
 \section{The Backpropagation Algorithm}
 

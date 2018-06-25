@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      xlabel={Input \(z\)},
+      ylabel={Activation \(y\)},
+      legend style={
+        at={(0.05, 0.95)},
+        anchor=north west
+      }
+    ]
+    \addplot[blue, domain=-10:10]{max(0, x)};
+  \end{axis}
+\end{tikzpicture}

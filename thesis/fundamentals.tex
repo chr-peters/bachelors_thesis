@@ -140,7 +140,7 @@ and 1 based on the following equation:
   \phi(z) = \frac{1}{1 + e^{-\theta \cdot z}}
 \end{equation}
 The \(\theta\) parameter is used to adjust the sensitivity of the
-sigmoid function to its input signal. High values of \(\theta\) lead
+sigmoid function with respect to its input signal. High values of \(\theta\) lead
 to steep slopes around \(z=0\) while smaller values will lead to smoother
 slopes. An illustration of this relationship is presented in \fref{fig:sigmoid}.
 \begin{figure}[h]
@@ -149,6 +149,39 @@ slopes. An illustration of this relationship is presented in \fref{fig:sigmoid}.
   \caption{The sigmoid activation function plotted with different
     values of \(\theta\).}
   \label{fig:sigmoid}
+\end{figure}
+
+One important reason why the sigmoid function is often used is that it reduces
+the impact of outliers in the data without removing them. When the
+input of a neuron is large, it is reduced to a number near one, when it
+is very negative, the activation evaluates to a number near zero. This
+behaviour adds to the overall robustness of the network.
+
+\paragraph{The Rectified Linear Unit (ReLU)}
+Because it is not always desirable to reduce large signals to a
+smaller scale, this function will only replace negative values with
+zero and leave positive values untouched. This behaviour can be
+modeled by the following expression:
+\begin{equation}
+  \phi(z) = \max(0, z)
+\end{equation}
+When building deep neural networks, one of the problems that sometimes
+arise is that a signal will fade out when propagating through many
+hidden layers. This issue is remedied to some degree by using the ReLU
+function because large signals are not cut down. Due to the negative
+values being set to zero, the ReLU function is also non-linear when
+taking its whole domain into account. This is an important concept
+because non-linear activation functions are essential for a network to
+learn complex relationships. Another benefit of the ReLU function is
+that its derivative is either 1 or 0. This will be important when
+looking into the training of a neural network. Because of all these benefits,
+ReLUs are one of the state of the art activation functions in deep
+neural networks. A plot of the ReLU function is given in \fref{fig:relu}.
+\begin{figure}[h]
+  \centering
+  \input{../figures/relu_function}
+  \caption{The ReLU activation function.}
+  \label{fig:relu}
 \end{figure}
 
 \section{The Backpropagation Algorithm}

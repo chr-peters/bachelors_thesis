@@ -146,7 +146,7 @@ slopes. An illustration of this relationship is presented in \fref{fig:sigmoid}.
 \begin{figure}[h]
   \centering
   \input{../figures/sigmoid_function}
-  \caption{The sigmoid activation function plotted with different
+  \caption{The sigmoid activation function plotted for different
     values of \(\theta\).}
   \label{fig:sigmoid}
 \end{figure}
@@ -213,10 +213,12 @@ clear-cut values.\footnote{Imagine the \(z_i\) inputs of the output
   just normalize these values to obtain a probability for each neuron,
   we get \((0.22, 0.44, 0.22, 0.11)^T\). Using the exponential
   function first, we roughly get \((0.1, 0.75, 0.1, 0.05)^T\) which
-  amplifies the most likely outcome and attenuates the less likely
-  values. See
+  amplifies the most likely outcomes and attenuates the less likely
+  ones. See
   \url{https://datascience.stackexchange.com/questions/23159/in-softmax-classifier-why-use-exp-function-to-do-normalization}
-for a nice explanation and the source of this example.}
+  for a nice explanation and the source of this example.}
+
+\subsection{The Role of the Bias Value}
 
 \section{The Backpropagation Algorithm}
 

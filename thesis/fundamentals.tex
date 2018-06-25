@@ -13,14 +13,16 @@ them in layers as depicted in \fref{fig:basic-network}.
 \begin{figure}[h]
   \centering
   \resizebox{0.75\textwidth}{!}{\input{../figures/basic_network}}
-  \caption{The structure of a simple ANN. The nodes represent the
+  \caption{The structure of an ANN can be described by a
+    directed graph. The nodes represent the
     neurons, the edges represent their connections, also indicating
     the flow of information.}
   \label{fig:basic-network}
 \end{figure}
 
 When an artificial neuron receives a signal on some of its
-incoming connections, it may elect to become active.\footnote{The
+incoming connections, it may elect to become active based on the input
+it collects.\footnote{The
   details of this
   process are further illustrated in \fref{sec:artificial-neurons}.}
 In this state it also influences all neurons it has an outgoing
@@ -37,7 +39,11 @@ connected neighbors in the next layer. This process repeats until the
 \textit{output layer} is reached. The neurons in this layer represent the
 output of the whole network. Each layer in between is called a \textit{hidden
 layer} because there is no direct communication between the neurons in
-this layer and the environment.
+this layer and the environment. Networks that satisfy this basic
+architectural model where each layer is fully connected with its
+following layer and signals only flow in one direction without cycles
+are called
+\textit{fully connected feedforward networks}.
 
 The goal behind this procedure usually is to convert an input signal
 into a meaningful output by feeding it through the network. If the
@@ -75,7 +81,8 @@ basically consists of three components:
     related weight of that connection before arriving at the next
     component.
   \item \textbf{A summation unit:} This component adds up all the
-    weighted signals that arrive at the neuron as well as a bias value
+    weighted signals that arrive at the neuron as well as a constant
+    bias value
     \(b_k\) that is independent of the inputs.
   \item \textbf{An activation function:} The activation function
     \(\phi(\cdot)\) takes the output of the summation unit and applies
@@ -95,9 +102,10 @@ basically consists of three components:
     into an activation function that will determine the ouput signal.}
   \label{fig:single-neuron}
 \end{figure}
-As a result, the output of the summation unit of a particular
+Transforming this model into mathematical equations, the output of the
+summation unit of a particular
 neuron \(k\) with \(n\) input signals \(x_j\) can be described by the
-following equation:
+following formula:
 \begin{equation}
   z_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}} + b_k
 \end{equation}
@@ -113,8 +121,36 @@ summation unit which can be described by the following expression:
 
 \subsection{Activation Functions}
 \label{sec:activation-functions}
+The basic task of an activation function is to determine the level of
+activity that a neuron emits based on the input it receives. Because the
+incoming signals are first weighted and summed up by the summation unit, they
+arrive at the activation function as a single value \(z\). Since the
+output \(y\)
+of the neuron is also a scalar, each activation function can be
+described as \(\phi: \mathbb{R} \rightarrow \mathbb{R}\). In the
+following paragraphs, an overview of the most popular activation
+functions will be presented that is based on the descriptions found in
+\cite{Patterson}.\footnote{See section \textit{Activation Functions}
+  in chapter two.}
 
+\paragraph{The Sigmoid Function}
+This activation function transforms an input \(z\) into a range between 0
+and 1 based on the following equation:
+\begin{equation}
+  \phi(z) = \frac{1}{1 + e^{-\theta \cdot z}}
+\end{equation}
+The \(\theta\) parameter is used to adjust the sensitivity of the
+sigmoid function to its input signal. High values of \(\theta\) lead
+to steep slopes around \(z=0\) while smaller values will lead to smoother
+slopes. An illustration of this relationship is presented in \fref{fig:sigmoid}.
+\begin{figure}[h]
+  \centering
+  \input{../figures/sigmoid_function}
+  \caption{The sigmoid activation function plotted with different
+    values of \(\theta\).}
+  \label{fig:sigmoid}
+\end{figure}
 
-\section{The Multilayer Perceptron}
+\section{The Backpropagation Algorithm}
 
 \section{Deep Networks}

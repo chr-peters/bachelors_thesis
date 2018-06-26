@@ -430,4 +430,44 @@ best results.
 
 \subsection{Training the Network}
 
+In order to be able to improve the quality of the networks'
+predictions, i.e. training the network, we first have to introduce a
+way of measuring the performance of the network.
+
+Let \(x\) be an example input from the training dataset and \(y'(x)\)
+the desired output of the network that corresponds to the
+example. Both \(x\) and \(y'(x)\) are vectors. The element \(x_i\) represents the
+input signal of the \(i\)'th input neuron and the element \(y_i'(x)\)
+represents the desired activation of the \(i\)'th output neuron. To
+measure how close the actual output \(y(x)\) of the network is to the
+desired output \(y'(x)\), we can use the \textit{sum of the squared
+  errors}:
+\begin{equation}
+  L_x = \sum_{i=1}^{n}{(y_i(x)-y_i'(x))^2} = \norm{y(x)-y'(x)}^2
+\end{equation}
+where \(n\) is the number of output neurons and \(L_x\) resembles the
+\textit{loss of the network} for a single example \(x\).
+
+The \textit{average total loss} of the network over all examples in
+the dataset (the total number of examples will be denoted by \(N\))
+can be computed by just averaging the losses of every single example:
+\begin{equation}
+  L = \frac{1}{N} \cdot \sum_{x}{L_x}
+\end{equation}
+We can also express this value in terms of the current configuration
+of the neural network that is represented by the set of weights \(w\)
+and the set of biases \(b\) that is currently used as the \textit{loss
+function} \(L(w, b)\).
+Being now able to measure the training performance of the network with
+respect to its configuration by
+calculating the average loss \(L(w, b)\), we can now define the training
+problem as follows:
+\begin{equation*}
+  \text{\textit{Find a set of weights \(w\) and biases \(b\) such
+      that} } L(w, b) \rightarrow min
+\end{equation*}
+This implies that training the network is nothing but an optimization
+problem where the weights and biases of the network are
+adjusted to find the minimum of the loss function \(L(w, b)\).
+
 \section{Deep Networks}

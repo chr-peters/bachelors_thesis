@@ -188,6 +188,7 @@ neural networks. A plot of the ReLU function is presented in \fref{fig:relu}.
 \end{figure}
 
 \paragraph{The Softmax Activation Function}
+\label{sec:softmax}
 This activation function is usually applied to the output neurons of
 a network. When a neural network is used to perform classification
 tasks, each output neuron is commonly associated with a specific
@@ -258,7 +259,7 @@ bias values lead to activity even when the raw input \(a_k\) is still
 negative and negative bias values require bigger input signals in
 order for the neuron to fire.
 
-\section{Training a Neural Network to Perform Classification}
+\section{Neural Networks as Classifiers}
 
 After establishing a mathematical model that helps us to describe a
 neural network, there is still one problem to be solved: How to train
@@ -375,5 +376,58 @@ by first computing the metrics for each class separately and then
 taking the average of these values to estimate a global score.
 
 \subsection{Network Architecture for Classification}
+
+The architecture of the neural network that will be used to perform
+the classification task is highly dependent of the structure of the
+dataset. Remembering that a neural network consists of an
+\textit{input layer} as well as \textit{hidden layers} and an
+\textit{output layer}, the question is how to assemble these layers to
+fit the task well.
+
+The first consideration is that each feature in the dataset will
+correspond to an input signal that is fed into the network. Thus the
+amount of neurons in the input layer must be equal to the amount of
+features in the dataset. Because the only responsibility of the input
+units is to receive a signal from the environment and pass it on to
+the next layer, these neurons don't have a special activation function
+that transforms the input. The activation of these neurons is simply
+the identity of the incoming signal.
+
+As already hinted at in \fref{sec:softmax} about the softmax
+activation function, it is highly useful if the
+network is able to not only to predict the correct label but also to
+indicate how certain it is about it. This is why the output layer will
+consist of as many neurons as there are classes in the dataset which
+will enable us to use the softmax function on this layer to retrieve a
+set of probabilities for each example that is presented to the
+network. The neuron that shows the highest degree of activity,
+i.e. assigns the highest probability, determines the label the network
+will assign to the example.
+
+The number of hidden layers that are inserted between the input and
+the output
+layer highly depends on the complexity of the task. As the number of hidden
+neurons grows, there are more parameters (weights and biases) left to
+be adjusted during
+training which means more capacity for the network to learn. The
+danger lays in the fact that if there are too many hidden neurons, the
+network will just use this capacity to memorize the training examples
+and not extract general concepts from them which will lead to low
+accuracy on unseen examples. This problem can also be
+described by the more general term \textit{overfitting}. On the
+contrary, if there are not enough hidden neurons, the network won't be
+able to capture all concepts that are present in the data which will
+lead to an opposite effect: \textit{underfitting}. Both overfitting
+and underfitting harm the ability of the network to generalize well
+beyond the training data.
+
+Because there are no general rules up to this point on how to structure
+the hidden layers of a neural network, it is recommended to apply the
+basic rule of thumb of increasing the amount of hidden layers with the
+complexity level of the problem. It also helps to try out different
+structures during the training phase to see which one produces the
+best results.
+
+\subsection{Training the Network}
 
 \section{Deep Networks}

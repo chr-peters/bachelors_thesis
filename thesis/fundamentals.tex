@@ -271,9 +271,9 @@ train a neural network to perform classification.
 
 The basis of a classification task is usually formed by a dataset that
 consists of features as well as labels. The goal of the classification
-algorithm is to predict the label of an instance of the dataset only
-based its features. In order to achieve this, the classifier first has
-to build a model based on a training dataset which is called
+algorithm is to predict the label of an instance of the dataset by
+only looking at its features. In order to achieve this, the classifier
+first has to build a model based on a training dataset. This procedure is called
 \textit{training}. In the next step, the classifier is presented with
 some new examples that it did not see during training. The classifier
 is tested on these new examples to estimate its performance and to see
@@ -281,14 +281,18 @@ if it was able to learn any concepts from the data, i.e. to
 \textit{generalize}. This phase is also
 called \textit{testing}. Because classification requires pre-labeled
 instances and the classifier acts like a learner who learns from a
-teacher, classification is an example of a broader domain that is called
+teacher, classification is an example of a broader domain called
 \textit{supervised learning}.
 
 \subsubsection{Evaluating a Classifier}
 
 In order to find out how well a classifier generalizes after training,
 the results of the testing phase can be entered into a
-\textit{confusion matrix} that is structured as shown in \fref{fig:confusion-matrix}.
+\textit{confusion matrix} that is structured as shown in
+\fref{fig:confusion-matrix}.\footnote{It should be noted that this
+  concept can be
+  extended to classification tasks with more than two classes as well
+  by simply adding new rows and columns for each new class.}
 \begin{figure}[h]
   \centering
   \renewcommand\theadfont{\bfseries}
@@ -315,7 +319,60 @@ predicted that the example belongs to the column-class. The resulting
 measurements of true positives, true negatives, false positives and
 false negatives can be used to compute the following evaluation
 metrics:\footnote{A collection of these metrics can also be found in
-  \cite{Patterson}.}
+  \cite{Patterson}, see chapter \textit{Evaluating Models}.}
+
+\paragraph{Accuracy} This measurement determines the percentage of
+examples in the testing set that the classifier predicted correctly.
+It can be denoted by the following equation:
+\begin{equation}
+  Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+This metric works well if there is roughly an equal amount of examples
+for each class. However if one of the classes makes up most of the
+examples, the classifier can reach a high degree of accuracy by just
+predicting the label of the dominant class every single time. This
+impairs the significance of this metric when imbalances among the
+classes are present.
+
+\paragraph{Precision} The precision score shows the percentage of
+examples that were correctly classified as positive among all examples
+that the classifier labeled positive:
+\begin{equation}
+  Precision = \frac{TP}{TP + FP}
+\end{equation}
+This metric can also be interpreted as an estimate of the conditional probability
+that the classifier is right given that it predicted a positive class:
+\begin{equation*}
+  Precision = P(\text{Classifier is right} \vert \text{Classifier predicted
+    POSITIVE})
+\end{equation*}
+
+\paragraph{Recall} This measurement remedies the imbalance issues of
+the accuracy metric by determining the percentage of correctly
+classified examples for each separate class. It can be denoted by the
+following expression:
+\begin{equation}
+  Recall = \frac{TP}{TP + FN}
+\end{equation}
+The recall score can also be interpreted as an estimate of the conditional
+probability that the
+classifier is right given a specific class:
+\begin{equation*}
+  Recall = P(\text{Classifier is right} \vert \text{Class is POSITIVE})
+\end{equation*}
+
+\paragraph{F1 Score} This metric combines precision and recall to
+calculate their so called \textit{harmonic mean}. It is often used
+when evaluating classification models, thus its equation is also
+displayed here:
+\begin{equation}
+  \text{F1 Score} = \frac{2*Precision*Recall}{Precision+Recall}
+\end{equation}
+\\
+It should be noted that all these measurements can be extended to
+classification tasks with more than two classes as well. This is done
+by first computing the metrics for each class separately and then
+taking the average of these values to estimate a global score.
 
 \subsection{Network Architecture for Classification}
 

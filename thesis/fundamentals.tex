@@ -450,7 +450,7 @@ where \(n\) is the number of output neurons and \(L_x\) resembles the
 
 The \textit{average total loss} of the network over all examples in
 the dataset (the total number of examples will be denoted by \(N\))
-can be computed by just averaging the losses of every single example:
+can be computed by averaging the losses of every single example:
 \begin{equation}
   L = \frac{1}{N} \cdot \sum_{x}{L_x}
 \end{equation}
@@ -458,15 +458,15 @@ We can also express this value in terms of the current configuration
 of the neural network that is represented by the set of weights \(w\)
 and the set of biases \(b\) that is currently used as the \textit{loss
 function} \(L(w, b)\).
-Being now able to measure the training performance of the network with
+Now being able to measure the training performance of the network with
 respect to its configuration by
-calculating the average loss \(L(w, b)\), we can now define the training
+calculating the average loss \(L(w, b)\), we can define the training
 problem as follows:
 \begin{equation*}
   \text{\textit{Find a set of weights \(w\) and biases \(b\) such
       that} } L(w, b) \rightarrow min
 \end{equation*}
-This implies that training the network is nothing but an optimization
+This implies that training the network is an optimization
 problem where the weights and biases of the network are
 adjusted to find the minimum of the loss function \(L(w, b)\).
 

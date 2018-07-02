@@ -378,7 +378,7 @@ taking the average of these values to estimate a global score.
 \subsection{Network Architecture for Classification}
 
 The architecture of the neural network that will be used to perform
-the classification task is highly dependent of the structure of the
+the classification task is highly dependent on the structure of the
 dataset. Remembering that a neural network consists of an
 \textit{input layer} as well as \textit{hidden layers} and an
 \textit{output layer}, the question is how to assemble these layers to
@@ -395,7 +395,7 @@ the identity of the incoming signal.
 
 As already hinted at in \fref{sec:softmax} about the softmax
 activation function, it is highly useful if the
-network is able to not only to predict the correct label but also to
+network is able to not only predict the correct label but also to
 indicate how certain it is about it. This is why the output layer will
 consist of as many neurons as there are classes in the dataset which
 will enable us to use the softmax function on this layer to retrieve a
@@ -424,7 +424,7 @@ beyond the training data.
 Because there are no general rules up to this point on how to structure
 the hidden layers of a neural network, it is recommended to apply the
 basic rule of thumb of increasing the amount of hidden layers with the
-complexity level of the problem. It also helps to try out different
+complexity level of the problem. It also helps to try different
 structures during the training phase to see which one produces the
 best results.
 
@@ -452,6 +452,7 @@ The \textit{average total loss} of the network over all examples in
 the dataset (the total number of examples will be denoted by \(N\))
 can be computed by averaging the losses of every single example:
 \begin{equation}
+  \label{eq:loss}
   L = \frac{1}{N} \cdot \sum_{x}{L_x}
 \end{equation}
 We can also express this value in terms of the current configuration
@@ -469,5 +470,137 @@ problem as follows:
 This implies that training the network is an optimization
 problem where the weights and biases of the network are
 adjusted to find the minimum of the loss function \(L(w, b)\).
+
+The most common approach to solve the optimization problem is a
+technique called \textit{gradient descent}. In each step of this
+procedure, the gradient \(\nabla L(w, b)\) of the loss function \(L\)
+with respect to the weights \(w\) as well as the biases \(b\) is
+computed. This is done because the gradient always points in the
+direction of the steepest ascent of a function. Because the goal is to
+minimize \(L\), one can simply take tiny successive steps in the
+direction of the \textit{negative} gradient to arrive at a minimum of
+\(L\) resulting in the following
+algorithm describing how to adjust the weights \(w\) and biases \(b\)
+in each step \(t\):
+\begin{equation}
+  (w, b)^T_{t+1} = (w, b)^T_t - \alpha \cdot \nabla L(w, b)
+\end{equation}
+The \(\alpha\) parameter in this equation describes the size of the
+steps that are taken in the direction of the negative gradient and
+is also called the \textit{learning rate} of the network. Choosing a
+reasonable value for \(\alpha\) is essential for a successful trainig
+phase. If the learning rate is too big, the steps taken will also be
+too big resulting in skipping and not finding the minimum. Too small
+values of \(\alpha\) will lead to slow convergence.
+
+If the surface of \(L\) is convex, i.e. there is only one global
+minimum, the algorithm is
+guaranteed to converge for a sufficiently small learning rate. In
+practical application however this property
+is usually not present due to the complexity of \(L\). Despite of this
+circumstance, gradient descent usually still works well and converges
+to a local minimum of \(L\) that is usually sufficient for the network
+to solve the classification task.
+
+There still remains the question how to compute the
+gradient \(\nabla L(w, b)\) in each step of gradient descent. The
+answer to this is a procedure called \textit{backpropagation}.
+
+\subsubsection{The Backpropagation Algorithm}
+
+In order to derive the backpropagation algorithm that enables us to
+compute the gradient of the loss function, a little expansion of the
+current notation is necessary. The output of the \(k\)'th neuron of
+layer \(l\) in the network will now be denoted by \(y_k^{(l)}\). This
+is done to indicate in which layer the described neuron
+resides. Likewise the input \(z\), bias \(b\) and weights \(w\) of
+neuron \(k\) in layer \(l\) will also
+receive a superscript denoting the current layer. Using \(n_l\) to
+describe how many neurons there are in layer
+\(l\), we can write the equations that describe the input \(z\) and the
+output \(y\) of a neuron \(k\) like this:
+\begin{equation}
+  z_k^{(l)} = \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot y_j^{(l-1)}} + b_k^{(l)}
+\end{equation}
+\begin{equation}
+  y_k^{(l)} = \phi(z_k^{(l)})
+\end{equation}
+Because the total loss of the network is just the average of the
+losses for each single example (see \fref{eq:loss}), the gradient of
+\(L\) can be computed like this:
+\begin{equation}
+  \nabla L(w, b) = \nabla\left(\frac{1}{N} \cdot \sum_x{L_x(w, b)}
+  \right) = \frac{1}{N} \cdot \sum_x{\nabla L_x(w, b)}
+\end{equation}
+This means that computing the gradient of the total loss \(L\) is the
+same as computing the gradients of the losses for every single example
+\(x\) and then taking the average.
+
+The next step is to find a way to compute the partial derivatives that
+make up the components of the gradient. What this means is to find out
+how sensitive the loss function reacts to changes in a single weight
+\(w_{kj}^{(l)}\) or a single bias \(b_k^{(l)}\). Because all the
+weights as well as the bias of a neuron are combined with the inputs
+in its summation
+unit, it is helpful to take an intermediate step: Rather than
+computing the partial derivatives directly it makes sense to think
+about how changes
+in the input \(z_k^{(l)}\)
+of a particular neuron in the network impact the loss \(L_x\). This
+sensitivity of the loss function with respect to the input of a
+particular neuron will be dentoted by the following equation
+\begin{equation}
+  \delta_k^{(l)} = \frac{\partial L_x}{\partial z_k^{(l)}}
+\end{equation}
+where \(\delta_k^{(l)}\) describes the sensitivity of the loss function
+with respect to changes in the input of neuron \(k\) in layer \(l\).
+
+Utilizing the \textit{chain rule} of calculus one can now write the
+partial derivatives of the loss function with respect to the weights
+as well as the biases like this:
+\begin{equation}
+  \frac{\partial L_x}{\partial w_{kj}^{(l)}} = \frac{\partial
+    L_x}{\partial z_k^{(l)}} \cdot \frac{\partial z_k^{(l)}}{\partial
+    w_{kj}^{(l)}} = \delta_k^{(l)} \cdot \frac{\partial z_k^{(l)}}{\partial
+    w_{kj}^{(l)}}
+\end{equation}
+\begin{equation}
+  \frac{\partial L_x}{\partial b_k^{(l)}} = \frac{\partial
+    L_x}{\partial z_k^{(l)}} \cdot \frac{\partial z_k^{(l)}}{\partial
+    b_{k}^{(l)}} = \delta_k^{(l)} \cdot \frac{\partial z_k^{(l)}}{\partial
+    b_{k}^{(l)}}
+\end{equation}
+Computing the terms \(\frac{\partial z_k^{(l)}}{\partial
+  w_{kj}^{(l)}}\) and \(\frac{\partial z_k^{(l)}}{\partial
+  b_{k}^{(l)}}\) is fairly straightforward:
+\begin{equation}
+\frac{\partial z_k^{(l)}}{\partial w_{kj}^{(l)}} =
+\frac{\partial}{\partial
+  w_{kj}^{(l)}}\sum_{i=1}^{n_{l-1}}{w_{ki}^{(l)} \cdot y_i^{(l-1)}} +
+b_k^{(l)} = y_j^{(l-1)}
+\end{equation}
+\begin{equation}
+\frac{\partial z_k^{(l)}}{\partial b_{k}^{(l)}} =
+\frac{\partial}{\partial
+  b_{k}^{(l)}}\sum_{i=1}^{n_{l-1}}{w_{ki}^{(l)} \cdot y_i^{(l-1)}} +
+b_k^{(l)} = 1
+\end{equation}
+Now the only component that is left to be calculated is the
+sensitivity of the loss with respect to the input of each neuron,
+\(\delta_k^{(l)}\).
+In order to compute this value, two cases have to be distinguished: If
+\(l\) is the output layer, \(\delta_k^{(l)}\) will only influence the
+loss through one single neuron \(k\). Keeping this in mind,
+calculating \(\delta_k^{(l)}\) for the output layer goes like this:
+\begin{equation}
+\begin{split}
+  \delta_k^{(l)} & = \frac{\partial L_x}{\partial z_k^{(l)}}
+  \stackrel{\text{\textit{chain rule}}}{=} \frac{\partial
+    L_x}{\partial y_k^{(l)}} \cdot \frac{\partial y_k^{(l)}}{\partial
+    z_k^{(l)}} = \frac{\partial}{\partial y_k^{(l)}}
+  \sum_{i=1}^{n}{(y_i^{(l)}(x)-y_i'(x))^2} \cdot \frac{\partial}{\partial
+    z_k^{(l)}} \phi(z_k^{(l)}) \\ & = 2 \cdot (y_k^{(l)}-y_k'(x)) \cdot \phi'(z_k^{(l)})
+\end{split}
+\end{equation}
 
 \section{Deep Networks}

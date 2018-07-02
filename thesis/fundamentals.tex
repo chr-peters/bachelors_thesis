@@ -559,12 +559,14 @@ Utilizing the \textit{chain rule} of calculus one can now write the
 partial derivatives of the loss function with respect to the weights
 as well as the biases like this:
 \begin{equation}
+\label{eq:gradient-weight}
   \frac{\partial L_x}{\partial w_{kj}^{(l)}} = \frac{\partial
     L_x}{\partial z_k^{(l)}} \cdot \frac{\partial z_k^{(l)}}{\partial
     w_{kj}^{(l)}} = \delta_k^{(l)} \cdot \frac{\partial z_k^{(l)}}{\partial
     w_{kj}^{(l)}}
 \end{equation}
 \begin{equation}
+\label{eq:gradient-bias}
   \frac{\partial L_x}{\partial b_k^{(l)}} = \frac{\partial
     L_x}{\partial z_k^{(l)}} \cdot \frac{\partial z_k^{(l)}}{\partial
     b_{k}^{(l)}} = \delta_k^{(l)} \cdot \frac{\partial z_k^{(l)}}{\partial
@@ -588,19 +590,89 @@ b_k^{(l)} = 1
 Now the only component that is left to be calculated is the
 sensitivity of the loss with respect to the input of each neuron,
 \(\delta_k^{(l)}\).
-In order to compute this value, two cases have to be distinguished: If
+In order to compute this value, two cases have to be distinguished:
+First, if
 \(l\) is the output layer, \(\delta_k^{(l)}\) will only influence the
 loss through one single neuron \(k\). Keeping this in mind,
-calculating \(\delta_k^{(l)}\) for the output layer goes like this:
+calculating \(\delta_k^{(l)}\) for the output layer goes as follows:
 \begin{equation}
+\label{eq:delta-output}
 \begin{split}
   \delta_k^{(l)} & = \frac{\partial L_x}{\partial z_k^{(l)}}
   \stackrel{\text{\textit{chain rule}}}{=} \frac{\partial
     L_x}{\partial y_k^{(l)}} \cdot \frac{\partial y_k^{(l)}}{\partial
-    z_k^{(l)}} = \frac{\partial}{\partial y_k^{(l)}}
-  \sum_{i=1}^{n}{(y_i^{(l)}(x)-y_i'(x))^2} \cdot \frac{\partial}{\partial
+    z_k^{(l)}} \\ & = \left(\frac{\partial}{\partial y_k^{(l)}}
+  \sum_{i=1}^{n}{(y_i^{(l)}(x)-y_i'(x))^2}\right) \cdot \frac{\partial}{\partial
     z_k^{(l)}} \phi(z_k^{(l)}) \\ & = 2 \cdot (y_k^{(l)}-y_k'(x)) \cdot \phi'(z_k^{(l)})
 \end{split}
 \end{equation}
+The second case is \(l\) being a hidden layer. In this scenario,
+\(\delta_k^{(l)}\) will influence the output of the loss function
+through all the neurons in layer \(l+1\). Taking this into
+consideration, \(\delta_k^{(l)}\) for each hidden neuron can be
+computed like this:
+\begin{equation}
+\label{eq:delta-hidden}
+  \begin{split}
+    \delta_k^{(l)} & = \frac{\partial L_x}{\partial z_k^{(l)}}
+  \stackrel{\text{\textit{chain rule}}}{=} \frac{\partial
+    L_x}{\partial y_k^{(l)}} \cdot \frac{\partial y_k^{(l)}}{\partial
+    z_k^{(l)}} \\ & = \frac{\partial L_x}{\partial y_k^{(l)}} \cdot
+  \phi'(z_k^{(l)}) \stackrel{\text{\textit{infl. on next layer}}}{=} \left(\sum_{i=1}^{n_{l+1}}{\frac{\partial
+      L_x}{\partial
+  z_i^{(l+1)}} \cdot \frac{\partial z_i^{(l+1)}}{\partial
+      y_k^{(l)}}}\right) \cdot \phi'(z_k^{(l)})
+  \\ & = \left(\sum_{i=1}^{n_{l+1}}{\delta_i^{(l+1)} \cdot
+    \frac{\partial z_i^{(l+1)}}{\partial
+      y_k^{(l)}}}\right) \cdot \phi'(z_k^{(l)})
+  \\ & = \left(\sum_{i=1}^{n_{l+1}}{\delta_i^{(l+1)} \cdot
+    \frac{\partial}{\partial y_k^{(l)}} \left(
+    \sum_{j=1}^{n_{l}}{w_{ij}^{(l+1)} \cdot y_j^{(l)}} + b_i^{(l+1)}
+    \right)}\right)
+  \cdot \phi'(z_k^{(l)})
+  \\ & = \left(\sum_{i=1}^{n_{l+1}}{\delta_i^{(l+1)} \cdot w_{ik}^{(l+1)}}\right)
+  \cdot \phi'(z_k^{(l)})
+  \end{split}
+\end{equation}
+Putting it all together, we can formulate the backpropagation
+algorithm for a single training example \(x\) as follows:
+\begin{algorithm}
+  \caption{Backpropagation}
+  \begin{algorithmic}[1]
+    \State \(x\gets \text{current example}\)
+    \For{each layer \(l=2,\ldots,n\)}\Comment{Feed the input through the network}
+      \For{each neuron \(k\) in \(l\)}
+        \State \(z_k^{(l)}\gets \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot
+          y_j^{(l-1)}} + b_k^{(l)}\)\Comment{Compute the input}
+        \State \(y_k^{(l)}\gets \phi(z_k^{(l)})\)\Comment{Compute the
+          activation}
+      \EndFor
+    \EndFor
+    \For{each layer \(l=n, \ldots, 2\)}\Comment{Backward pass}
+      \For{each neuron \(k\) in \(l\)}
+        \If{\(l\) is output layer}\Comment{Compute delta}
+          \State \(\delta_k^{(l)}\gets 2 \cdot (y_k^{(l)}-y_k'(x)) \cdot
+          \phi'(z_k^{(l)})\)\Comment{See \ref{eq:delta-output}}
+        \Else
+          \State \(\delta_k^{(l)}\gets  \left(\sum_{i=1}^{n_{l+1}}{\delta_i^{(l+1)} \cdot w_{ik}^{(l+1)}}\right)
+            \cdot \phi'(z_k^{(l)})\)\Comment{See \ref{eq:delta-hidden}}
+        \EndIf
+        \For{each neuron \(j\) in \(l-1\)}
+          \State \(\frac{\partial L_x}{\partial w_{kj}^{(l)}}\gets
+          \delta_k^{(l)} \cdot y_j^{(l-1)}\)\Comment{Calculate gradient
+            w.r.t. weight, see \ref{eq:gradient-weight}}
+        \EndFor
+        \State \(\frac{\partial L_x}{\partial b_{k}^{(l)}}\gets
+          \delta_k^{(l)}\)\Comment{Calculate gradient
+            w.r.t. bias, see \ref{eq:gradient-bias}}  
+      \EndFor
+    \EndFor
+    \State\textbf{return }\(\nabla L_x(w, b)\)\Comment{Return the gradient of \(L_x\)}
+  \end{algorithmic}
+\end{algorithm}
+
+This procedure is repeated for each example \(x\) and the average of
+the computed gradients determines the direction of each step during
+gradient descent.
 
 \section{Deep Networks}

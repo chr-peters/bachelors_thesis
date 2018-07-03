@@ -635,11 +635,10 @@ computed like this:
   \end{split}
 \end{equation}
 Putting it all together, we can formulate the backpropagation
-algorithm for a single training example \(x\) as shown in algorithm
-\ref{backpropagation}.
+algorithm for a single training example \(x\) as shown in \fref{fig:backpropagation}.
 \begin{algorithm}
   \caption{Backpropagation}
-  \label{backpropagation}
+  \label{fig:backpropagation}
   \begin{algorithmic}[1]
     \State \(x\gets \text{current example}\)
     \For{each layer \(l=2,\ldots,n\)}\Comment{Feed the input through the network}
@@ -678,8 +677,8 @@ the computed gradients determines the direction of each step during
 gradient descent.\footnote{A brilliant visual explanation of the
   backpropagation algorithm can be found at
   \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U}. This and the
-  following videos have inspired the notation that was used during this
-  derivation.}
+  following videos of the series have inspired the notation that was
+  used during this derivation.}
 
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called

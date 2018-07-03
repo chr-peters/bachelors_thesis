@@ -504,7 +504,7 @@ to solve the classification task.
 
 There still remains the question how to compute the
 gradient \(\nabla L(w, b)\) in each step of gradient descent. The
-answer to this is a procedure called \textit{backpropagation}.
+answer to this is a procedure called \textit{backpropagation} \cite{Rumelhart}.
 
 \subsubsection{The Backpropagation Algorithm}
 
@@ -679,15 +679,16 @@ gradient descent.\footnote{A brilliant visual explanation of the
   \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U}. This and the
   following videos of the series have inspired the notation that was
   used during this derivation.}
-
+\newpage
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called
-\textit{stochastic gradient descent} does not compute the gradient
+\textit{stochastic gradient descent} \cite{Bottou} does not compute the
+gradient
 with respect to every single example, but divides the whole dataset in
-separate batches instead. Those random batches -- that's why it is
-called \textit{stochastic} -- are then used to compute the gradients.
+separate randomly sampled batches instead. Each batch is then used to
+take a step of gradient descent by
+computing the average gradient of all the examples in the batch.
 This is done to speed up the process of learning by not
 having to iterate over the whole dataset to take one step in the
 parameter space.
-
 \section{Deep Networks}

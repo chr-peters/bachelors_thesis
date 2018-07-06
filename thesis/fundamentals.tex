@@ -2,56 +2,58 @@
 
 \section{Artificial Neural Networks}
 
-Artificial neural networks (ANNs) are a class of machine learning algorithms
+Artificial Neural Networks (ANNs) are a class of machine learning algorithms
 that are loosely inspired by the structure of biological nervous
-systems.
+systems \cite{Haykin}.
 To be precise, each ANN consists of a collection of artificial neurons
-that are connected with each other. The neurons are able to exchange
-information along their connections.
+that are connected with each other, enabling them to exchange signals.
+The structure of an ANN can be described by a directed graph, i.e. a
+collection of nodes as well as
+directed edges. The nodes of the graph represent the neurons, the
+edges denote their connections.
 A common way to arrange artificial neurons within a network is to organize
-them in layers as depicted in \fref{fig:basic-network}.
+them in layers as depicted in fig. \ref{fig:basic-network}.
 \begin{figure}[h]
   \centering
   \resizebox{0.75\textwidth}{!}{\input{../figures/basic_network}}
-  \caption{The structure of an ANN can be described by a
-    directed graph. The nodes represent the
-    neurons, the edges represent their connections, also indicating
-    the flow of information.}
+  \caption{A common ANN-structure represented by a directed graph.}
   \label{fig:basic-network}
 \end{figure}
 
-When an artificial neuron receives signals on some of its
+When an artificial neuron receives a signal from its
 incoming connections, it may elect to become active based on the input
 it collects.\footnote{The
   details of this
   process are further illustrated in \fref{sec:artificial-neurons}.}
-In this state it also influences all neurons it has an outgoing
+In this state, it also influences all neurons it has an outgoing
 connection to by passing a signal along their
-channel. Those other neurons in turn may also elect to become
-active - this way a signal can propagate through the network along
-the connecting edges.
+channel. These other neurons in turn may also elect to become
+active, this way a signal can propagate through the network along
+the connecting edges as seen in fig. \ref{fig:basic-network}.
 
 Usually, each ANN consists of at least one layer of neurons that is
-responsible for receiving signals from the environment - we call this
-an \textit{input layer} (see \fref{fig:basic-network}). When these neurons
-receive a signal from the environment, they propagate it to their
-connected neighbors in the next layer. This process repeats until the
-\textit{output layer} is reached. The neurons in this layer represent the
-output of the whole network. Each layer in between is called a \textit{hidden
-layer} because there is no direct communication between the neurons in
+responsible for receiving signals from the environment. We call this
+an \textit{input layer}.
+When the neurons in this layer receive a signal, they propagate it
+to their connected neighbors in the next layer. This process repeats
+until the \textit{output layer} is reached. The neurons in the output
+layer represent the result of the whole network. Each layer in between
+the input and the output layer is called a \textit{hidden layer}
+because there is no direct communication between the neurons in
 this layer and the environment. Networks that satisfy this basic
-architectural model where each layer is fully connected with its
-following layer and signals only flow in one direction without cycles
+architectural model, where each layer is fully connected with its
+following layer and signals only flow in one direction without cycles,
 are called
 \textit{fully connected feedforward networks}.
 
-The goal behind this procedure usually is to convert an input signal
+The goal behind this procedure is to convert an input signal
 into a meaningful output by feeding it through the network. If the
 network is able to detect relevant features or patterns in the input
 signal, it can be used to perform tasks such as classification or
-regression (i.e. approximate discrete or continuous functions).
+regression, i.e. approximate discrete or continuous functions.
 In order for this to be possible, some kind of learning has to take
-place which enables the network to capture the essence of the data it
+place which enables the network to capture the the patterns present in
+the data it
 is confronted with. We will take a further look at these aspects as
 well as the mathematical model of a neural network in the following
 sections.
@@ -63,41 +65,42 @@ it is necessary to develop a mathematical model that describes all the
 operations taking place. The following descriptions are partially
 based on the explanations that are provided in \cite{Haykin}.\footnote{See
   chapter I.3: \textit{Models of a Neuron} for more details.}
-As shown in \fref{fig:single-neuron}, each artificial neuron
+As shown in fig \ref{fig:single-neuron}., the neural model
 basically consists of three components:
 \begin{enumerate}
   \item \textbf{A set of weighted inputs:} Each connection that is
-    leading into the neuron has a weight \(w_{kj}\) associated with it
+    leading into a neuron has a weight \(w_{kj}\) associated with it
     where \(k\) denotes the neuron in question and \(j\) denotes the
     index of the neuron that delivers its input to the current neuron
-    \(k\).\footnote{There might arise the question why the indexing of
+    \(k\). The signal that
+    passes the connection is multiplied by the
+    related weight of that connection before arriving at the next
+    component.
+    There might arise the question why the indexing of
     a weight from neuron \(j\) to neuron \(k\) is \(w_{kj}\) and
     \textit{not} \(w_{jk}\). This is the case because the weights are
     usually stored in matrices where each row corresponds to a
     neuron \(k\) and each column corresponds to an input \(j\) which
     allows for much faster computations by heavily utilizing
-    matrix-multiplication.} The signal that
-    passes the connection is multiplied by the
-    related weight of that connection before arriving at the next
-    component.
+    matrix-multiplication.
   \item \textbf{A summation unit:} This component adds up all the
     weighted signals that arrive at the neuron as well as a constant
     bias value
     \(b_k\) that is independent of the inputs. The reason for adding
-    the bias term is explained in \fref{sec:bias}.
+    the bias term is explained in section \ref{sec:bias}.
   \item \textbf{An activation function:} The activation function
     \(\phi(\cdot)\) applies a transformation to the output of the
     summation unit that is usually non-linear. The value of
     the activation function is the output of the neuron which will
     travel further through the network alongside the corresponding
-    connections. In \fref{sec:activation-functions}, a more
+    connections. In section \ref{sec:activation-functions}, a more
     detailed explanation of activation functions as well as some
     commonly used examples will be provided.
 \end{enumerate}
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{../figures/single_neuron}
-  \caption{The components of a single artificial neuron. This neuron
+  \caption{The components of the neural model. This neuron labeled
     \(k\) receives three input signals that are first multiplied by
     the associated weights, summed up including a bias and then fed
     into an activation function that will determine the ouput signal.}
@@ -120,6 +123,11 @@ summation unit which can be described by the following expression:
 \begin{equation}
   y_k = \phi(z_k)
 \end{equation}
+
+As we shall see in section \ref{sec:training},
+the entire knowledge of the network is stored within the weights as
+well as the biases. Adjusting this configuration in order to better
+match the data that the network receives is the main goal of training.
 
 \subsection{Activation Functions}
 \label{sec:activation-functions}
@@ -145,7 +153,7 @@ and 1 based on the following equation:
 The \(\theta\) parameter is used to adjust the sensitivity of the
 sigmoid function with respect to its input signal. High values of \(\theta\) lead
 to steep slopes around \(z=0\) while smaller values will lead to smoother
-slopes. An illustration of this relationship is presented in \fref{fig:sigmoid}.
+slopes. An illustration of this relationship is presented in fig. \ref{fig:sigmoid}.
 \begin{figure}[h]
   \centering
   \input{../figures/sigmoid_function}
@@ -162,8 +170,8 @@ behaviour adds to the overall robustness of the network.
 
 \paragraph{The Rectified Linear Unit (ReLU)}
 Because it is not always desirable to reduce large signals to a
-smaller scale, this function will only replace negative values with
-zero and leave positive values untouched. This behaviour can be
+smaller scale, the ReLU function will only replace negative values
+with zero and leave positive values untouched. This behaviour can be
 modeled by the following expression:
 \begin{equation}
   \phi(z) = \max(0, z)
@@ -179,7 +187,7 @@ learn complex relationships. Another benefit of the ReLU function is
 that its derivative is either 1 or 0. This will turn out to be important when
 looking into the training of a neural network. Because of all these benefits,
 ReLUs are one of the state of the art activation functions in deep
-neural networks. A plot of the ReLU function is presented in \fref{fig:relu}.
+neural networks. A plot of the ReLU function is presented in fig. \ref{fig:relu}.
 \begin{figure}[h]
   \centering
   \input{../figures/relu_function}
@@ -200,11 +208,11 @@ probability distribution over all possible classes.
 In an output layer consisting of \(n\) output neurons, the softmax
 function for each neuron \(i\) of that layer can be described by the
 following equation, where \(z_i\) denotes the summation units' output of
-the \(i\)'th neuron:
+the \(i^{th}\) neuron:
 \begin{equation}
   \phi(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{n}{e^{z_j}}}
 \end{equation}
-The softmax activation function represents -- loosely speaking -- the
+The softmax activation function represents, loosely speaking, the
 percentage of the current neurons activation with respect to the compound
 activation of all neurons in the layer.
 
@@ -212,15 +220,17 @@ There might arise the question why each input \(z_i\) is first fed
 into the exponential function \(e^x\) before translating the
 activations into probabilities. This is done to further amplify the
 strongest signals and attenuate the weaker ones which results in more
-clear-cut values.\footnote{Imagine the \(z_i\) inputs of the output
-  layer are given by the following vector: \((2, 4, 2, 1)^T\). If we
-  just normalize these values to obtain a probability for each neuron,
-  we get \((0.22, 0.44, 0.22, 0.11)^T\). Using the exponential
-  function first, we roughly get \((0.1, 0.75, 0.1, 0.05)^T\) which
-  amplifies the most likely outcomes and attenuates the less likely
-  ones. See
+clear-cut values as shown in the following example:
+
+Imagine the \(z_i\) inputs of the output
+layer are given by the following vector: \((2, 4, 2, 1)^T\). If we
+just normalize these values to obtain a probability for each neuron,
+we get\\\((0.22, 0.44, 0.22, 0.11)^T\). Using the exponential
+function first, we roughly get\\\((0.1, 0.75, 0.1, 0.05)^T\) which
+amplifies the most likely outcomes and attenuates the less likely
+ones.\footnote{See
   \url{https://datascience.stackexchange.com/questions/23159/in-softmax-classifier-why-use-exp-function-to-do-normalization}
-  for a nice explanation and the source of this example.}
+for a nice explanation and the source of this example.}
 
 \subsection{The Role of the Bias Value}
 \label{sec:bias}
@@ -429,7 +439,7 @@ structures during the training phase to see which one produces the
 best results.
 
 \subsection{Training the Network}
-
+\label{sec:training}
 In order to be able to improve the quality of the networks'
 predictions, i.e. training the network, we first have to introduce a
 way of measuring the performance of the network.

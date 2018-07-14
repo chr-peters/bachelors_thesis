@@ -645,10 +645,10 @@ computed like this:
   \end{split}
 \end{equation}
 Putting it all together, we can formulate the backpropagation
-algorithm for a single training example \(x\) as shown in \fref{fig:backpropagation}.
+algorithm for a single training example \(x\) as shown in Algorithm \ref{algo:backpropagation}.
 \begin{algorithm}
   \caption{Backpropagation}
-  \label{fig:backpropagation}
+  \label{algo:backpropagation}
   \begin{algorithmic}[1]
     \State \(x\gets \text{current example}\)
     \For{each layer \(l=2,\ldots,n\)}\Comment{Feed the input through the network}
@@ -682,6 +682,7 @@ algorithm for a single training example \(x\) as shown in \fref{fig:backpropagat
     \State\textbf{return }\(\nabla L_x(w, b)\)\Comment{Return the gradient of \(L_x\)}
   \end{algorithmic}
 \end{algorithm}
+
 This procedure is repeated for every example \(x\) and the average of
 the computed gradients determines the direction of each step during
 gradient descent.\footnote{A brilliant visual explanation of the
@@ -689,7 +690,7 @@ gradient descent.\footnote{A brilliant visual explanation of the
   \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U}. This and the
   following videos of the series have inspired the notation that was
   used during this derivation.}
-\newpage
+
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called
 \textit{stochastic gradient descent} \cite{Bottou} does not compute the
@@ -701,4 +702,34 @@ computing the average gradient of all the examples in the batch.
 This is done to speed up the process of learning by not
 having to iterate over the whole dataset to take one step in the
 parameter space.
-\section{Deep Networks}
+
+\subsection{Initializing the Network}
+
+The last step that has to be taken before deploying a neural network
+to solve a classification problem is initializing the weights and
+biases. At first glance it may be tempting to initialize all the
+parameters with the same number, for instance zero. Investigating further
+on this idea yields that this way of initializing the weights and
+biases makes it impossible for the network to learn. If all the
+weights in a layer have the same value, then every neuron in that
+layer will receive the same compounded input and thus will emit the same
+signal. Looking back at the backpropagation algorithm, it becomes
+evident that this leads to equal weight updates as well. This causes
+the neurons in a layer to continuously show equal amounts of activity
+which prevents the network from learning any meaningful concepts.
+
+To overcome this
+symmetry between neuron activations that is induced by initializing
+the weights equally, one has to employ initialization techniques that
+lead to \textit{symmetry breaking} among the neurons. This is best
+achieved by initializing each weight with a random number. A very
+common approach is to use either a gaussian or a uniform distribution
+with a variance of \(\frac{2}{n_{in} + n_{out}}\), where \(n_{in}\) is the number
+of neurons in the preceding layer and \(n_{out}\) is the number of
+neurons in the following layer of the weight. This procedure is
+also called ``Xavier Initialization'' and leads to improved learning
+beyond just breaking the symmetry between neuron
+activations by achieving a balance of the weight values that works well in
+practice.\footnote{See \cite{Gloriot} for further remarks and
+  explanations as well as the
+  origin of this technique.}

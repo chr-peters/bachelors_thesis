@@ -12,11 +12,12 @@ collection of nodes as well as
 directed edges. The nodes of the graph represent the neurons, the
 edges denote their connections.
 A common way to arrange artificial neurons within a network is to organize
-them in layers as depicted in fig. \ref{fig:basic-network}.
+them in layers as depicted in Fig. \ref{fig:basic-network}.
 \begin{figure}[h]
   \centering
   \resizebox{0.75\textwidth}{!}{\input{../figures/basic_network}}
-  \caption{A common ANN-structure represented by a directed graph.}
+  \caption{A common ANN-structure consisting of three layers of
+    neurons represented by a directed graph.}
   \label{fig:basic-network}
 \end{figure}
 
@@ -29,28 +30,28 @@ In this state, it also influences all neurons it has an outgoing
 connection to by passing a signal along their
 channel. These other neurons in turn may also elect to become
 active, this way a signal can propagate through the network along
-the connecting edges as seen in fig. \ref{fig:basic-network}.
+the connecting edges as seen in Fig. \ref{fig:basic-network}.
 
 Usually, each ANN consists of at least one layer of neurons that is
-responsible for receiving signals from the environment. We call this
-an \textit{input layer}.
+responsible for receiving signals from the environment, this special
+type of layer is called an \textit{input layer}.
 When the neurons in this layer receive a signal, they propagate it
 to their connected neighbors in the next layer. This process repeats
 until the \textit{output layer} is reached. The neurons in the output
 layer represent the result of the whole network. Each layer in between
 the input and the output layer is called a \textit{hidden layer}
 because there is no direct communication between the neurons in
-this layer and the environment. Networks that satisfy this basic
+such a layer and the environment. Networks that satisfy this basic
 architectural model, where each layer is fully connected with its
 following layer and signals only flow in one direction without cycles,
 are called
 \textit{fully connected feedforward networks}.
 
-The goal behind this procedure is to convert an input signal
-into a meaningful output by feeding it through the network. If the
-network is able to detect relevant features or patterns in the input
-signal, it can be used to perform tasks such as classification or
-regression, i.e. approximate discrete or continuous functions.
+The goal behind artificial neural networks is to convert an input
+signal into a meaningful output by feeding it through the network. If
+the network is able to detect relevant features or patterns in the
+input signal, it can be used to perform tasks such as classification
+or regression, i.e. approximate discrete or continuous functions.
 In order for this to be possible, some kind of learning has to take
 place which enables the network to capture the the patterns present in
 the data it
@@ -65,7 +66,7 @@ it is necessary to develop a mathematical model that describes all the
 operations taking place. The following descriptions are partially
 based on the explanations that are provided in \cite{Haykin}.\footnote{See
   chapter I.3: \textit{Models of a Neuron} for more details.}
-As shown in fig \ref{fig:single-neuron}., the neural model
+As shown in Fig. \ref{fig:single-neuron}, the neural model
 basically consists of three components:
 \begin{enumerate}
   \item \textbf{A set of weighted inputs:} Each connection that is
@@ -78,7 +79,8 @@ basically consists of three components:
     component.
     There might arise the question why the indexing of
     a weight from neuron \(j\) to neuron \(k\) is \(w_{kj}\) and
-    \textit{not} \(w_{jk}\). This is the case because the weights are
+    \textit{not} \(w_{jk}\). This is the case because in practical
+    implementations of neural networks, the weights are
     usually stored in matrices where each row corresponds to a
     neuron \(k\) and each column corresponds to an input \(j\) which
     allows for much faster computations by heavily utilizing
@@ -134,11 +136,17 @@ match the data that the network receives is the main goal of training.
 The basic task of an activation function is to determine the level of
 activity that a neuron emits based on the input it receives. Because the
 incoming signals are first weighted and summed up by the summation unit, they
-arrive at the activation function as a single value \(z\). Since the
-output \(y\)
-of the neuron is also a scalar, each activation function can be
-described as \(\phi: \mathbb{R} \rightarrow \mathbb{R}\). In the
-following paragraphs, an overview of the most popular activation
+arrive at the activation function as a single value \(z_k\). Since the
+output \(y_k\)
+of neuron \(k\) is also a scalar, each activation function can be
+described as \(\phi: \mathbb{R} \rightarrow \mathbb{R}\). A very
+important property of an activation function is
+\textit{nonlinearity}. This is due to the fact that chaining together
+multiple linear functions, as would be the case if each artificial
+neuron had a linear activation function, collapses into just a single
+linear transformation, which would make it impossible for the network
+to learn any concepts beyond simple linear relationships.
+In the following paragraphs, an overview of the most popular activation
 functions will be presented that is based on the descriptions found in
 \cite{Patterson}.\footnote{See section \textit{Activation Functions}
   in chapter two.}
@@ -153,7 +161,8 @@ and 1 based on the following equation:
 The \(\theta\) parameter is used to adjust the sensitivity of the
 sigmoid function with respect to its input signal. High values of \(\theta\) lead
 to steep slopes around \(z=0\) while smaller values will lead to smoother
-slopes. An illustration of this relationship is presented in fig. \ref{fig:sigmoid}.
+slopes. An illustration of this relationship is presented in
+Fig. \ref{fig:sigmoid}.
 \begin{figure}[h]
   \centering
   \input{../figures/sigmoid_function}
@@ -161,12 +170,21 @@ slopes. An illustration of this relationship is presented in fig. \ref{fig:sigmo
     values of \(\theta\).}
   \label{fig:sigmoid}
 \end{figure}
-
-One important reason why the sigmoid function is often used is that it reduces
+One important reason why the sigmoid function was often used at the
+time neural networks were first developed, was that it reduces
 the impact of outliers in the data without removing them. When the
 input of a neuron is large, it is reduced to a number near one, when it
 is very negative, the activation evaluates to a number near zero. This
 behaviour adds to the overall robustness of the network.
+
+In the early days of neural networks, people were also seeking for
+biological inspirations when constructing ANNs. The graph of the
+sigmoid function can also be interpreted as the firing rate of a
+biological neuron that saturates for big inputs, which contributed to
+its popularity in the past. However, caution is
+advised when putting too much weight onto these interpretations, since
+real neurons are much more complex in practice than simple
+mathematical equations.
 
 \paragraph{The Rectified Linear Unit (ReLU)}
 Because it is not always desirable to reduce large signals to a
@@ -179,15 +197,19 @@ modeled by the following expression:
 When building deep neural networks, one of the problems that sometimes
 arise is that a signal will fade out when propagating through many
 hidden layers. This issue is remedied to some degree by using the ReLU
-function because large signals are not cut down. Due to the negative
-values being set to zero, the ReLU function is also non-linear when
-taking its whole domain into account. This is an important concept
-because non-linear activation functions are essential for a network to
-learn complex relationships. Another benefit of the ReLU function is
-that its derivative is either 1 or 0. This will turn out to be important when
-looking into the training of a neural network. Because of all these benefits,
-ReLUs are one of the state of the art activation functions in deep
-neural networks. A plot of the ReLU function is presented in fig. \ref{fig:relu}.
+function because big signals are not cut down. The fact that all
+negative values are set to zero when the ReLU function is used, leads
+to sparsity among the neuron activations which promotes simpler and
+possibly richer representations. This analogy can also be found in
+real biological neurons, which makes it an interesting thing to note
+that ReLUs are actually more biologically inspired than the sigmoid
+function \cite{Glorot2011}. Another benefit of the ReLU function is
+that its derivative is either 1 or 0, which makes it very simple to
+compute. This will turn out to be important when
+looking into the training of neural networks.
+Because of all these advantages, ReLUs are one of the state of the art
+activation functions in deep neural networks. A plot of the ReLU
+function is presented in Fig. \ref{fig:relu}.
 \begin{figure}[h]
   \centering
   \input{../figures/relu_function}
@@ -214,23 +236,24 @@ the \(i^{th}\) neuron:
 \end{equation}
 The softmax activation function represents, loosely speaking, the
 percentage of the current neurons activation with respect to the compound
-activation of all neurons in the layer.
+activation of all neurons in the layer. The inputs \(z_i\) of the
+ouput layer can thus be interpreted as the \textit{unnormalized
+  log-probabilities} for each class.
 
 There might arise the question why each input \(z_i\) is first fed
 into the exponential function \(e^x\) before translating the
 activations into probabilities. This is done to further amplify the
 strongest signals and attenuate the weaker ones which results in more
-clear-cut values as shown in the following example:
+clear-cut values which makes learning for the network easier, as shown
+in the following example:
 
 Imagine the \(z_i\) inputs of the output
 layer are given by the following vector: \((2, 4, 2, 1)^T\). If we
 just normalize these values to obtain a probability for each neuron,
 we get\\\((0.22, 0.44, 0.22, 0.11)^T\). Using the exponential
-function first, we roughly get\\\((0.1, 0.75, 0.1, 0.05)^T\) which
+function first, we roughly get\\\((0.1, 0.76, 0.1, 0.04)^T\) which
 amplifies the most likely outcomes and attenuates the less likely
-ones.\footnote{See
-  \url{https://datascience.stackexchange.com/questions/23159/in-softmax-classifier-why-use-exp-function-to-do-normalization}
-for a nice explanation and the source of this example.}
+ones.
 
 \subsection{The Role of the Bias Value}
 \label{sec:bias}
@@ -238,7 +261,7 @@ There still remains the question why in each artificial neuron there
 is a bias value \(b_k\) added to the weighted sum of the inputs. The
 reason for this is related to the activation function: The bias term
 acts like a parameter that determines how to shift the activation
-function along the x-axis. We already know from \fref{eq:input} that
+function along the x-axis. We already know from Eq. \ref{eq:input} that
 for a neuron \(k\) with \(n\) inputs the toal input signal \(z_k\)
 adds up to:
 \begin{equation*}
@@ -247,7 +270,8 @@ adds up to:
 Let us denote the weighted sum of the input signals as a separate
 value \(a_k = \sum_{j=1}^{n}{x_j \cdot w_{kj}}\) that describes the raw
 input of the neuron. This means that \(z_k
-= a_k + b_k\) and using the sigmoid function (see \fref{sec:sigmoid}) as an example to
+= a_k + b_k\) and using the sigmoid function (see section
+\ref{sec:sigmoid}) as an example to
 demonstrate the effects of the bias value, we can slightly rewrite it as
 \begin{equation*}
   \phi(a_k) = \frac{1}{1+e^{-(a_k+b_k)}}
@@ -255,7 +279,7 @@ demonstrate the effects of the bias value, we can slightly rewrite it as
 also setting \(\theta = 1\) for demonstration purposes. Plotting the
 activation function for
 different values of \(b_k\) immediately reveals the effect of the bias
-value as a shift-parameter which can be seen in \fref{fig:bias}.
+value as a shift-parameter which can be seen in Fig. \ref{fig:bias}.
 \begin{figure}[h]
   \centering
   \input{../figures/bias}
@@ -730,6 +754,6 @@ neurons in the following layer of the weight. This procedure is
 also called ``Xavier Initialization'' and leads to improved learning
 beyond just breaking the symmetry between neuron
 activations by achieving a balance of the weight values that works well in
-practice.\footnote{See \cite{Gloriot} for further remarks and
+practice.\footnote{See \cite{Glorot2010} for further remarks and
   explanations as well as the
   origin of this technique.}

@@ -1,0 +1,25 @@
+\chapter{Convolutional Neural Networks}
+
+While fully connected feed forward networks work well on data of
+moderate dimensionality, training them becomes increasingly more
+difficult once the number of inputs grows. In the case of image
+classification for example, even an image with just a resulution of
+256x256 pixels produces \(256 \cdot 256 = 65536\) inputs. Considering
+that colored images usually have at least three color channels (take
+the popular \textbf{R}ed \textbf{G}reen \textbf{B}lue color model as
+an example), this multiplies the amount of input dimensions by a
+factor of 3, yielding \(65536 \cdot 3 = 196608\) dimensions total. If
+we wanted to use a fully connected hidden layer with only half as many
+hidden neurons, we would have to optimize \(196608 \cdot 98304 =
+19,327,352,832\) weights only for the first layer. Let us assume that
+storing a single weight in floating point format costs 4 bytes. This
+would lead to spacial requirements of \(19,327,352,832 \cdot 4 =
+77,309,411,328\) bytes or 77.31 gigabytes! One should quickly notice
+that using this kind of neural networks to classify images is beyond
+infeasible. But how is it possible that state-of-the-art classifiers
+achieve human like performance in image classification, also
+relying on artificial neural networks \cite{Russakovsky}? In the
+following sections, we will explain how to modify our current feed
+forward architecture in order to cope with these challenges and how
+these astonishing results are possible.
+

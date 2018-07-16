@@ -23,8 +23,7 @@ them in layers as depicted in Fig. \ref{fig:basic-network}.
 
 When an artificial neuron receives a signal from its
 incoming connections, it may elect to become active based on the input
-it collects.\footnote{The details of this process are further
-  illustrated in section \ref{sec:artificial-neurons}.}
+it collects, see section \ref{sec:artificial-neurons}.
 In this state, it also influences all neurons it has an outgoing
 connection to by passing a signal along their
 channel. These other neurons in turn may also elect to become
@@ -128,7 +127,8 @@ summation unit which can be described by the following expression:
 As we shall see in section \ref{sec:training},
 the entire knowledge of the network is stored within the weights as
 well as the biases. Adjusting this configuration in order to better
-match the data that the network receives is the main goal of training.
+match the data that the network receives is the main goal of training,
+see section \ref{sec:training}.
 
 \subsection{Activation Functions}
 \label{sec:activation-functions}
@@ -170,7 +170,7 @@ Fig. \ref{fig:sigmoid}.
   \label{fig:sigmoid}
 \end{figure}
 One important reason why the sigmoid function was often used at the
-time neural networks were first developed, was that it reduces
+time neural networks were first developed, is that it reduces
 the impact of outliers in the data without removing them. When the
 input of a neuron is large, it is reduced to a number near one, when it
 is very negative, the activation evaluates to a number near zero. This
@@ -198,7 +198,7 @@ When building deep neural networks, one of the problems that sometimes
 arise is that a signal will fade out when propagating through many
 hidden layers. This issue is remedied to some degree by using the ReLU
 function because big signals are not cut down. The fact that all
-negative values are set to zero when the ReLU function is used, leads
+negative values are set to zero when the ReLU function is used leads
 to sparsity among the neuron activations which promotes simpler and
 possibly richer representations. This analogy can also be found in
 real biological neurons, which makes it an interesting thing to note
@@ -222,7 +222,7 @@ function is presented in Fig. \ref{fig:relu}.
 This activation function is usually applied to the output neurons of
 a network. When a neural network is used to perform classification
 tasks, each output neuron is commonly associated with a specific
-class. In classification tasks it is highly desirable to assign a
+class. In classification tasks, it is highly desirable to assign a
 probability to each class that represents how likely it is that the
 input data belongs to that class. The softmax activation function is
 used to achieve this by setting up the output neurons to represent a
@@ -365,7 +365,7 @@ It can be denoted by the following equation:
   Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation}
 This metric works well if there is roughly an equal amount of examples
-for each class. However if one of the classes makes up most of the
+for each class. However, if one of the classes makes up most of the
 examples, the classifier can reach a high degree of accuracy by just
 predicting the label of the dominant class every single time. This
 impairs the significance of this metric when imbalances among the
@@ -429,8 +429,8 @@ the next layer, these neurons don't have a special activation function
 that transforms the input. The activation of these neurons is simply
 the identity of the incoming signal. In order to avoid features on larger
 numerical scales dominate features with smaller values, the data is
-usually normalized and scaled to equal ranges before being fed into
-the network.
+usually normalized and scaled to equal ranges first before being fed
+into the network.
 
 The number of hidden layers that are inserted between the input and
 the output layer highly depends on the complexity of the task. As the
@@ -449,7 +449,7 @@ lead to an opposite effect: \textit{underfitting}. Both overfitting
 and underfitting harm the ability of the network to generalize well
 beyond the training data. In practice however, it is recommended to
 rather have too many hidden neurons and hidden layers than an
-insufficient amount because there are other techniques such as
+insufficient amount, because there are other techniques such as
 \textit{regularization} that punish increasing model complexity to
 prevent overfitting \cite{Bengio}. The first choice of activation
 function that is used in the hidden layers is usually the ReLU (see
@@ -474,7 +474,7 @@ way of measuring the performance of the network with respect to the
 training examples it is presented with.
 
 Let \(x\) be an example input from the training dataset and \(y'(x)\)
-the desired output of the network that corresponds to the
+be the desired output of the network that corresponds to the
 example. Both \(x\) and \(y'(x)\) are vectors. The element \(x_i\) represents the
 input signal of the \(i^{th}\) input neuron and the element \(y_i'(x)\)
 represents the desired activation of the \(i^{th}\) output neuron. To
@@ -720,10 +720,9 @@ gradient descent.
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called
 \textit{stochastic gradient descent} \cite{Bottou} does not compute the
-gradient
-with respect to every single example, but divides the whole dataset in
-separate randomly sampled batches instead. Each batch is then used to
-take a step of gradient descent by
+gradient with respect to every single example, but divides the whole
+dataset into separate randomly sampled batches instead. Each batch is
+then used to take a step of gradient descent by
 computing the average gradient of all the examples in the batch.
 This is done to speed up the process of learning by not
 having to iterate over the whole dataset to take one step in the

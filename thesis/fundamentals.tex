@@ -23,9 +23,8 @@ them in layers as depicted in Fig. \ref{fig:basic-network}.
 
 When an artificial neuron receives a signal from its
 incoming connections, it may elect to become active based on the input
-it collects.\footnote{The
-  details of this
-  process are further illustrated in \fref{sec:artificial-neurons}.}
+it collects.\footnote{The details of this process are further
+  illustrated in section \ref{sec:artificial-neurons}.}
 In this state, it also influences all neurons it has an outgoing
 connection to by passing a signal along their
 channel. These other neurons in turn may also elect to become
@@ -187,6 +186,7 @@ real neurons are much more complex in practice than simple
 mathematical equations.
 
 \paragraph{The Rectified Linear Unit (ReLU)}
+\label{sec:relu}
 Because it is not always desirable to reduce large signals to a
 smaller scale, the ReLU function will only replace negative values
 with zero and leave positive values untouched. This behaviour can be
@@ -309,48 +309,50 @@ consists of features as well as labels. The goal of the classification
 algorithm is to predict the label of an instance of the dataset by
 only looking at its features. In order to achieve this, the classifier
 first has to build a model based on a training dataset. This procedure is called
-\textit{training}. In the next step, the classifier is presented with
+\textit{training} (see section \ref{sec:training}). In the next step,
+called \textit{testing},the classifier is presented with
 some new examples that it did not see during training. The classifier
 is tested on these new examples to estimate its performance and to see
 if it was able to learn any concepts from the data, i.e. to
-\textit{generalize}. This phase is also
-called \textit{testing}. Because classification requires pre-labeled
-instances and the classifier acts like a learner who learns from a
-teacher, classification is an example of a broader domain called
-\textit{supervised learning}.
+\textit{generalize}. Because the classifier infers a function from
+labeled data, classification is an example of a broader domain
+called \textit{supervised learning}.
 
 \subsubsection{Evaluating a Classifier}
 
 In order to find out how well a classifier generalizes after training,
 the results of the testing phase can be entered into a
-\textit{confusion matrix} that is structured as shown in
-\fref{fig:confusion-matrix}.\footnote{It should be noted that this
-  concept can be
-  extended to classification tasks with more than two classes as well
-  by simply adding new rows and columns for each new class.}
-\begin{figure}[h]
+\textit{confusion matrix} that is structured as shown in Table
+\ref{tbl:confusion-matrix}.
+\begin{table}[h]
   \centering
   \renewcommand\theadfont{\bfseries}
   \begin{tabular}{|c|c|c|}
     \hline
     & \thead{Class Positive\\(Predicted)} & \thead{Class Negative\\(Predicted)} \\
     \hline
-    \thead{Class Positive\\(Actual)} & True positives (TP) & False
-    negatives (FN) \\
+    \thead{Class Positive\\(Actual)} & True Positives (TP) & False
+    Negatives (FN) \\
     \hline
-    \thead{Class Negative\\(Actual)} & False positives (FP) & True
-    negatives (TN) \\
+    \thead{Class Negative\\(Actual)} & False Positives (FP) & True
+    Negatives (TN) \\
     \hline
   \end{tabular}
   \caption{The structure of a confusion matrix for a
-    classification task with two classes ``positive'' and
-    ``negative''.}
-  \label{fig:confusion-matrix}
-\end{figure}
+    classification task with two classes ``Positive'' and
+    ``Negative''.}
+  \label{tbl:confusion-matrix}
+\end{table}
 
 Each entry in this matrix describes how often the
 classifier was presented with an example of the row-class during testing and
-predicted that the example belongs to the column-class. The resulting
+predicted that the example belongs to the column-class. For instance, the value FP
+(False Positives) expresses how often the classifier saw an example of
+class ``Negative'' and predicted that it belongs to class
+``Positive''. The same principle also applies to the other cells in the
+confusion matrix. It should be noted that this concept can be extended to
+classification tasks with more than two classes as well by simply
+adding new rows and columns for each new class. The resulting
 measurements of true positives, true negatives, false positives and
 false negatives can be used to compute the following evaluation
 metrics:\footnote{A collection of these metrics can also be found in
@@ -404,8 +406,8 @@ displayed here:
   \text{F1 Score} = \frac{2*Precision*Recall}{Precision+Recall}
 \end{equation}
 \\
-It should be noted that all these measurements can be extended to
-classification tasks with more than two classes as well. This is done
+It should be noted that all these measurements can also be extended to
+classification tasks with more than two classes. This is done
 by first computing the metrics for each class separately and then
 taking the average of these values to estimate a global score.
 
@@ -419,15 +421,41 @@ dataset. Remembering that a neural network consists of an
 fit the task well.
 
 The first consideration is that each feature in the dataset will
-correspond to an input signal that is fed into the network. Thus the
+correspond to an input signal that is fed into the network, thus the
 amount of neurons in the input layer must be equal to the amount of
 features in the dataset. Because the only responsibility of the input
 units is to receive a signal from the environment and pass it on to
 the next layer, these neurons don't have a special activation function
 that transforms the input. The activation of these neurons is simply
-the identity of the incoming signal.
+the identity of the incoming signal. In order to avoid features on larger
+numerical scales dominate features with smaller values, the data is
+usually normalized and scaled to equal ranges before being fed into
+the network.
 
-As already hinted at in \fref{sec:softmax} about the softmax
+The number of hidden layers that are inserted between the input and
+the output layer highly depends on the complexity of the task. As the
+number of hidden
+neurons grows, there are more parameters (weights and biases) left to
+be adjusted during
+training which means more capacity for the network to learn. However, the
+danger lays in the fact that if there are too many hidden neurons and
+hidden layers, the network will just use this capacity to memorize the
+training examples and not extract general concepts from them which
+will lead to low accuracy on unseen examples. This problem can also be
+described by the more general term \textit{overfitting}. On the
+contrary, if there are not enough hidden neurons, the network won't be
+able to capture all concepts that are present in the data which will
+lead to an opposite effect: \textit{underfitting}. Both overfitting
+and underfitting harm the ability of the network to generalize well
+beyond the training data. In practice however, it is recommended to
+rather have too many hidden neurons and hidden layers than an
+insufficient amount because there are other techniques such as
+\textit{regularization} that punish increasing model complexity to
+prevent overfitting \cite{Bengio}. The first choice of activation
+function that is used in the hidden layers is usually the ReLU (see
+section \ref{sec:relu}) because of its various beneficial properties.
+
+As already hinted at in section \ref{sec:softmax} about the softmax
 activation function, it is highly useful if the
 network is able to not only predict the correct label but also to
 indicate how certain it is about it. This is why the output layer will
@@ -436,43 +464,20 @@ will enable us to use the softmax function on this layer to retrieve a
 set of probabilities for each example that is presented to the
 network. The neuron that shows the highest degree of activity,
 i.e. assigns the highest probability, determines the label the network
-will assign to the example.
-
-The number of hidden layers that are inserted between the input and
-the output
-layer highly depends on the complexity of the task. As the number of hidden
-neurons grows, there are more parameters (weights and biases) left to
-be adjusted during
-training which means more capacity for the network to learn. The
-danger lays in the fact that if there are too many hidden neurons, the
-network will just use this capacity to memorize the training examples
-and not extract general concepts from them which will lead to low
-accuracy on unseen examples. This problem can also be
-described by the more general term \textit{overfitting}. On the
-contrary, if there are not enough hidden neurons, the network won't be
-able to capture all concepts that are present in the data which will
-lead to an opposite effect: \textit{underfitting}. Both overfitting
-and underfitting harm the ability of the network to generalize well
-beyond the training data.
-
-Because there are no general rules up to this point on how to structure
-the hidden layers of a neural network, it is recommended to apply the
-basic rule of thumb of increasing the amount of hidden layers with the
-complexity level of the problem. It also helps to try different
-structures during the training phase to see which one produces the
-best results.
+will assign to the example as a result of the classification process.
 
 \subsection{Training the Network}
 \label{sec:training}
 In order to be able to improve the quality of the networks'
 predictions, i.e. training the network, we first have to introduce a
-way of measuring the performance of the network.
+way of measuring the performance of the network with respect to the
+training examples it is presented with.
 
 Let \(x\) be an example input from the training dataset and \(y'(x)\)
 the desired output of the network that corresponds to the
 example. Both \(x\) and \(y'(x)\) are vectors. The element \(x_i\) represents the
-input signal of the \(i\)'th input neuron and the element \(y_i'(x)\)
-represents the desired activation of the \(i\)'th output neuron. To
+input signal of the \(i^{th}\) input neuron and the element \(y_i'(x)\)
+represents the desired activation of the \(i^{th}\) output neuron. To
 measure how close the actual output \(y(x)\) of the network is to the
 desired output \(y'(x)\), we can use the \textit{sum of the squared
   errors}:
@@ -510,10 +515,10 @@ technique called \textit{gradient descent}. In each step of this
 procedure, the gradient \(\nabla L(w, b)\) of the loss function \(L\)
 with respect to the weights \(w\) as well as the biases \(b\) is
 computed. This is done because the gradient always points in the
-direction of the steepest ascent of a function. Because the goal is to
+direction of the steepest ascent of a function. In order to
 minimize \(L\), one can simply take tiny successive steps in the
-direction of the \textit{negative} gradient to arrive at a minimum of
-\(L\) resulting in the following
+direction of the \textit{negative} gradient to arrive at a local
+minimum of \(L\) resulting in the following
 algorithm describing how to adjust the weights \(w\) and biases \(b\)
 in each step \(t\):
 \begin{equation}
@@ -530,7 +535,7 @@ values of \(\alpha\) will lead to slow convergence.
 If the surface of \(L\) is convex, i.e. there is only one global
 minimum, the algorithm is
 guaranteed to converge for a sufficiently small learning rate. In
-practical application however this property
+practical application however, this property
 is usually not present due to the complexity of \(L\). Despite of this
 circumstance, gradient descent usually still works well and converges
 to a local minimum of \(L\) that is usually sufficient for the network
@@ -544,15 +549,15 @@ answer to this is a procedure called \textit{backpropagation} \cite{Rumelhart}.
 
 In order to derive the backpropagation algorithm that enables us to
 compute the gradient of the loss function, a little expansion of the
-current notation is necessary. The output of the \(k\)'th neuron of
+current notation is necessary. The output of the \(k^{th}\) neuron of
 layer \(l\) in the network will now be denoted by \(y_k^{(l)}\). This
 is done to indicate in which layer the described neuron
-resides. Likewise the input \(z\), bias \(b\) and weights \(w\) of
+resides. Likewise, the input \(z\), bias \(b\) and weights \(w\) of
 neuron \(k\) in layer \(l\) will also
 receive a superscript denoting the current layer. Using \(n_l\) to
 describe how many neurons there are in layer
-\(l\), we can write the equations that describe the input \(z\) and the
-output \(y\) of a neuron \(k\) like this:
+\(l\), we can slightly rewrite the equations that describe the input
+\(z\) and the output \(y\) of a neuron \(k\) like this:
 \begin{equation}
   z_k^{(l)} = \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot y_j^{(l-1)}} + b_k^{(l)}
 \end{equation}
@@ -560,15 +565,15 @@ output \(y\) of a neuron \(k\) like this:
   y_k^{(l)} = \phi(z_k^{(l)})
 \end{equation}
 Because the total loss of the network is just the average of the
-losses for each single example (see \fref{eq:loss}), the gradient of
+losses for each single example (see Eq. \ref{eq:loss}), the gradient of
 \(L\) can be computed like this:
 \begin{equation}
   \nabla L(w, b) = \nabla\left(\frac{1}{N} \cdot \sum_x{L_x(w, b)}
   \right) = \frac{1}{N} \cdot \sum_x{\nabla L_x(w, b)}
 \end{equation}
 This means that computing the gradient of the total loss \(L\) is the
-same as computing the gradients of the losses for every single example
-\(x\) and then taking the average.
+same as computing the gradients of the losses for every single
+training example \(x\) and then taking the average.
 
 The next step is to find a way to compute the partial derivatives that
 make up the components of the gradient. What this means is to find out
@@ -577,19 +582,19 @@ how sensitive the loss function reacts to changes in a single weight
 weights as well as the bias of a neuron are combined with the inputs
 in its summation
 unit, it is helpful to take an intermediate step: Rather than
-computing the partial derivatives directly it makes sense to think
+computing the partial derivatives directly, it makes sense to think
 about how changes
 in the input \(z_k^{(l)}\)
 of a particular neuron in the network impact the loss \(L_x\). This
 sensitivity of the loss function with respect to the input of a
-particular neuron will be dentoted by the following equation
+particular neuron will be dentoted by the following equation:
 \begin{equation}
   \delta_k^{(l)} = \frac{\partial L_x}{\partial z_k^{(l)}}
 \end{equation}
 where \(\delta_k^{(l)}\) describes the sensitivity of the loss function
 with respect to changes in the input of neuron \(k\) in layer \(l\).
 
-Utilizing the \textit{chain rule} of calculus one can now write the
+Utilizing the \textit{chain rule} of calculus, one can now write the
 partial derivatives of the loss function with respect to the weights
 as well as the biases like this:
 \begin{equation}
@@ -625,10 +630,11 @@ Now the only component that is left to be calculated is the
 sensitivity of the loss with respect to the input of each neuron,
 \(\delta_k^{(l)}\).
 In order to compute this value, two cases have to be distinguished:
-First, if
-\(l\) is the output layer, \(\delta_k^{(l)}\) will only influence the
-loss through one single neuron \(k\). Keeping this in mind,
-calculating \(\delta_k^{(l)}\) for the output layer goes as follows:
+First, if \(l\) is the output layer, \(\delta_k^{(l)}\) will only
+influence the loss through one single neuron \(k\). Keeping this in
+mind, calculating \(\delta_k^{(l)}\) for the output layer goes as
+follows:
+
 \begin{equation}
 \label{eq:delta-output}
 \begin{split}
@@ -709,11 +715,7 @@ algorithm for a single training example \(x\) as shown in Algorithm \ref{algo:ba
 
 This procedure is repeated for every example \(x\) and the average of
 the computed gradients determines the direction of each step during
-gradient descent.\footnote{A brilliant visual explanation of the
-  backpropagation algorithm can be found at
-  \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U}. This and the
-  following videos of the series have inspired the notation that was
-  used during this derivation.}
+gradient descent.
 
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called
@@ -729,7 +731,7 @@ parameter space.
 
 \subsection{Initializing the Network}
 
-The last step that has to be taken before deploying a neural network
+The last step that has to be taken before training a neural network
 to solve a classification problem is initializing the weights and
 biases. At first glance it may be tempting to initialize all the
 parameters with the same number, for instance zero. Investigating further
@@ -748,12 +750,10 @@ the weights equally, one has to employ initialization techniques that
 lead to \textit{symmetry breaking} among the neurons. This is best
 achieved by initializing each weight with a random number. A very
 common approach is to use either a gaussian or a uniform distribution
-with a variance of \(\frac{2}{n_{in} + n_{out}}\), where \(n_{in}\) is the number
-of neurons in the preceding layer and \(n_{out}\) is the number of
-neurons in the following layer of the weight. This procedure is
-also called ``Xavier Initialization'' and leads to improved learning
-beyond just breaking the symmetry between neuron
-activations by achieving a balance of the weight values that works well in
-practice.\footnote{See \cite{Glorot2010} for further remarks and
-  explanations as well as the
-  origin of this technique.}
+with a mean of zero and a variance of \(\frac{2}{n_{in} + n_{out}}\),
+where \(n_{in}\) is the number of neurons in the preceding layer and
+\(n_{out}\) is the number of neurons in the following layer of the
+weight. This procedure is also called ``Xavier Initialization'' and
+leads to improved learning beyond just breaking the symmetry between
+neuron activations by achieving a balance of the weight values that
+works well in practice \cite{Glorot2010}.

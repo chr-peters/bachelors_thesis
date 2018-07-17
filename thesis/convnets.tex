@@ -66,6 +66,20 @@ classification on the basis of these high level features. All the
 relevant layer types are described in more detail within the following
 sections.
 
+\subsection{The Input Layer}
+
+Because CNNs are based on spatial assumptions on the input data, it
+has to be arranged in a way that makes optimal use of its
+structure. This is why it is most common to organize the input neurons
+in the form of a two dimensional grid, where each cell resembles a
+part of the input. In the case of image classification for example,
+one would typically set the \(x\) and \(y\) dimensions of the grid
+equal to the numer of pixels in the input image in the corresponding
+directions. This results in each input neuron in the grid resembling
+one pixel in the image. As was the case with ordinary feed forward
+networks, the input layer does not compute an activation function and
+just passes its signal further into the network.
+
 \subsection{Feature Extraction Layers}
 
 \subsubsection{Convolution Layers}
@@ -83,7 +97,7 @@ Recalling that the first component of the basic neural model was the
 weighted sum of the inputs with a set of weights, we can transfer this
 concept to convolutional layers by interpreting the weights as a
 filter that each neuron applies to its local receptive field. This
-filter, sometimes also refered to as a kernel, can be described by a
+filter, that we will also refer to as a kernel, can be described by a
 stack of matrices of equal dimensions, where each matrix consists of
 the weights that are applied to the local region in the input within
 one channel. The amount of matrixes stacked corresponds to the depth
@@ -95,16 +109,17 @@ local area of the input and the filter is applied and a bias value is
 added as usual.
 
 This procedure can also be expressed in terms of mathematical
-equations as follows: Let the width of the filter \(K\) be \(x\), the
-height be \(y\) and the depth be \(z\). Let us further assume that the
-local receptive field of the current neuron \(k\) can be described by
-the coordinates \((i, j)\) with respect to the input \(X\), where
-\((i, j)\) indicates the shift in \(x\) and \(y\) direction. The
-result of applying the filter and adding the bias value \(b\) can be
-denoted by the following formula:
+equations as follows: Let the width of the kernel \(K\) be \(x_K\), the
+height be \(y_K\) and the depth be \(z\), where \(z\) is usually equal
+to the amount of different channels when dealing with images. Let us
+further assume that the local receptive field of the current neuron
+\(k\) can be described by the coordinates \((i, j)\) with respect to
+the input \(X\), where \((i, j)\) indicates the shift of the field in
+\(x\) and \(y\) direction. The result of applying the filter and
+adding the bias value \(b\) can be denoted by the following formula:
 \begin{equation}
   \label{Eq:convolution}
-  z_k = \sum_{n=1}^{z}{\sum_{m=1}^{y}{\sum_{l=1}^{x}{X[i+l, j+m, z] \cdot
+  z_k = \sum_{n=1}^{z}{\sum_{m=1}^{y_K}{\sum_{l=1}^{x_K}{X[i+l, j+m, n] \cdot
         K[l, m, n]}}} + b
 \end{equation}
 This operation is very similar to the concept of convolution in the
@@ -114,7 +129,7 @@ area of signal processing, which is the origin of the name
 After calculating the summation result \(z_k\) for every neuron in the
 grid, an activation function is applied just like in feed forward
 networks. Because of its various advantages, the most common choice is
-the ReLU function which yields the following expression describing the
+the ReLU function which results in the following expression describing the
 output \(y_k\) of every neuron \(k\) in the grid:
 \begin{equation}
   y_k = max(0, z_k)
@@ -148,7 +163,7 @@ the following.
 
 The kernel size can be described by the width and the height of each
 neurons' local receptive field. In Eq. \ref{Eq:convolution}, these
-dimensions are denoted by the parameters \(x\) and \(y\). Note that
+dimensions are denoted by the parameters \(x_K\) and \(y_K\). Note that
 the depth of the kernel is always predefined as the depth of the input
 from the previous layer.
 
@@ -160,23 +175,65 @@ first local field to the region described by a \((0, 0)\) coordinate
 shift (see the \(i\) and \(j\) parameters in
 Eq. \ref{Eq:convolution}). Each consecutive neuron will receive a
 receptive field that is shifted by some amount. To arrange these
-fields, we will first only shift in the direction of the width of the
+fields, we will first only shift in the \(x\) direction of the
 input. The amount of shifting in each step is described by the
-x\_stride of the kernel. After shifting across the width is no longer
-possible, the x position of the local receptive field is reset to zero
-and a shift happens in the y direction. This shift can be adjusted by
-the parameter y\_stride. The same procedure is repeated until every
-area of the input is covered by a neuron.
+\textit{x\_stride} of the kernel. After shifting across the \(x\) axis
+is no longer possible, the \(x\) position of the local receptive field is
+reset to zero and a shift happens in the \(y\) direction. This shift
+can be adjusted by the parameter \textit{y\_stride}. The same
+procedure is repeated until every area of the input is covered by a
+neuron.
 
 \paragraph{Number of Kernels}
 
 This parameter describes the number of kernels to apply in a
 convolution layer and, as we saw earlier, corresponds to the amount of
 features to detect. Because every kernel results in its own feature
-map, the depth of the output of the convolution layer is equal to the
+map, the depth of the output of a convolution layer is equal to its
 number of kernels.
 
 \subsubsection{Pooling Layers}
 
+Pooling layers are usually inserted after convolution layers to capture
+the most essential patterns of the feature maps in order to reduce
+their complexity. This is done by downsampling the activations,
+resulting in a smaller input grid for the next layer. Quite similar to
+convolution layers, a pooling layer can also be imagined as a filter
+that runs over the input, but instead of computing dot products, this
+filter only returns the maximum value of the region it is currently
+looking at. This technique is also known as
+\textit{max-pooling}. Unlike convolution layers however, pooling
+layers do not influence the depth of the input because each feature
+map is processed separately. There are two parameters that can be
+adjusted in each pooling layer:
+\begin{itemize}
+  \item \textbf{Size:} This parameter controls the size of the filter
+    that is used for downsampling.
+  \item \textbf{Stride:} Similar to the stride parameter of a
+    convolution layer, this value adjusts the step size in each
+    direction that is taken during pooling.
+\end{itemize}
+Due to the fact that the downsampling operation purposefully discards
+information regarding the exact location where the feature was
+detected, this procedure contributes to the \textit{spacial
+  invariance} of convolutional neural network. What this means it that
+the network is able to recognize certain features, no matter where
+exactly they are in the image. This is one of the most important traits of
+the CNN architecture which greatly contributes to its effectiveness in
+practical applications.
+
 \subsection{Classification Layers}
 
+After the feature extraction has been performed, the complexity of the
+input data has usually been reduced significantly by stacking multiple
+convolution and pooling layers. On the basis of this simpler and also
+richer representation of the data, an ordinary fully connected feed
+forward network can be used to perform the classification task. This
+is done by inserting a fully connected hidden layer after the last
+layer of the feature extraction part. This hidden layer is connected
+to each neuron in the grid. Depending on the complexity of the
+problem, it is also possible to insert multiple fully connected hidden
+layers right after each other to complete the classification task. As
+usual, the last layer consists of as many output neurons as there are
+classes, employing the softmax activation function to compute the
+classification result.

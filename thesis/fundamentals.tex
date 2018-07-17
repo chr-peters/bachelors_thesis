@@ -728,6 +728,24 @@ This is done to speed up the process of learning by not
 having to iterate over the whole dataset to take one step in the
 parameter space.
 
+\subsection{When to Stop Training}
+
+Being able to compute the weight and bias updates during each step of
+optimization, there still remains the question when to stop the
+training procedure. In practice it is very common to only train for a
+predefined number of passes through the whole dataset. Such a pass
+through the training data, during which every single training example
+is presented to the network once, is called an epoch.
+
+It is also common to have a third dataset next to the training and
+testing set which is used to validate that the network still improves
+its generalization ability during training. This dataset is called the
+\textit{validation set}. Usually, during each epoch,
+the error rate on the validation set is computed. If this error does
+not decrease further during training for a predefined number of
+epochs, the training is stopped. This technique is also called
+\textit{early stopping}.
+
 \subsection{Initializing the Network}
 
 The last step that has to be taken before training a neural network

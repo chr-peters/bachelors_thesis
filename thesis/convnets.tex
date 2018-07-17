@@ -23,3 +23,160 @@ following sections, we will explain how to modify our current feed
 forward architecture in order to cope with these challenges and how
 these astonishing results are possible.
 
+\section{Overview}
+
+One characteristic of fully connected feed forward networks is that
+every neuron in the first hidden layer is connected to every input
+node. While this allows every neuron to make use of every piece of
+information accross the whole input, it also increases the complexity
+of the task that each neuron tries to solve. If the data has a
+specific spatial structure, as would be the case for images, this
+knowledge is not incorporated into the fully connected
+architecture. In Convolutional Neural Networks (CNNs), the goal is to
+reduce the model complexity by making use of the spacial structure of
+the input. This is done by connecting each neuron of the first hidden
+layer only to a locally constrained area of the image. We call this
+area the \textit{local receptive field} of the neuron. Each neuron in
+the first hidden layer will receive its own local receptive field of
+inputs that it manages. This way, each hidden neuron is no longer
+fully connected to every input, instead it is only connected to a
+specific part of it. To reduce the complexity of the model even
+further, every hidden neuron of a layer will share its weights and
+biases with all the other neurons of that same layer. Intuitively, this
+means that each neuron will look for the same input feature in the
+data, the only difference being the local receptive field the
+individual neurons watch. This concept, also called a
+\textit{convolution layer}, is the main foundation of the CNN
+architecture.
+
+\section{The Convolutional Architecture}
+
+The convolutional architecture is composed of three main parts
+\cite{Patterson}\footnote{See \textit{CNN Architecture Overview} in
+  chapter 4.}:
+\begin{enumerate}
+  \item The input layer
+  \item Feature extraction layers
+  \item Classification layers
+\end{enumerate}
+These components are stacked on top of each other to successively
+break down the classification task into smaller problems, by first
+extracting the relevant features from the data and then performing
+classification on the basis of these high level features. All the
+relevant layer types are described in more detail within the following
+sections.
+
+\subsection{Feature Extraction Layers}
+
+\subsubsection{Convolution Layers}
+
+The convolution layer, which was briefly described above, is the main
+component of the feature extraction block. It is used to detect
+features across the input by having each neuron watch a specific part
+of it. This can be visualized best by imagining the neurons be
+arranged in a two dimensional grid where each neuron in the grid
+watches a corresponding area in the input (see Fig \ldots). To describe
+this behaviour more precisely, we can slightly extend the neural model
+we have already developed for feed forward networks.
+
+Recalling that the first component of the basic neural model was the
+weighted sum of the inputs with a set of weights, we can transfer this
+concept to convolutional layers by interpreting the weights as a
+filter that each neuron applies to its local receptive field. This
+filter, sometimes also refered to as a kernel, can be described by a
+stack of matrices of equal dimensions, where each matrix consists of
+the weights that are applied to the local region in the input within
+one channel. The amount of matrixes stacked corresponds to the depth
+of the input data. When dealing with images, this would be the same as
+the amount of channels (e.g. RGB has three color channels, thus the
+kernel would consist of three stacked matrices). To compute the
+weighted sum of the input with the filter, the dot product between the
+local area of the input and the filter is applied and a bias value is
+added as usual.
+
+This procedure can also be expressed in terms of mathematical
+equations as follows: Let the width of the filter \(K\) be \(x\), the
+height be \(y\) and the depth be \(z\). Let us further assume that the
+local receptive field of the current neuron \(k\) can be described by
+the coordinates \((i, j)\) with respect to the input \(X\), where
+\((i, j)\) indicates the shift in \(x\) and \(y\) direction. The
+result of applying the filter and adding the bias value \(b\) can be
+denoted by the following formula:
+\begin{equation}
+  \label{Eq:convolution}
+  z_k = \sum_{n=1}^{z}{\sum_{m=1}^{y}{\sum_{l=1}^{x}{X[i+l, j+m, z] \cdot
+        K[l, m, n]}}} + b
+\end{equation}
+This operation is very similar to the concept of convolution in the
+area of signal processing, which is the origin of the name
+\textit{convolutional} neural networks.
+
+After calculating the summation result \(z_k\) for every neuron in the
+grid, an activation function is applied just like in feed forward
+networks. Because of its various advantages, the most common choice is
+the ReLU function which yields the following expression describing the
+output \(y_k\) of every neuron \(k\) in the grid:
+\begin{equation}
+  y_k = max(0, z_k)
+\end{equation}
+Carrying out this computation on every neuron in the
+grid yields a new pattern of activations across the layer, which is
+called a \textit{feature map} and can be interpreted intuitively as
+follows: When computing the dot product between the kernel \(K\) and
+the local receptive field of the neuron, this dot product acts like a
+similarity measure between the local input and \(K\). When the dot
+product is large, this indicates that the kernel and the local input
+area very similar, when it is very negative, the input and the kernel
+are contrasting. If the dot product is close to zero, this means that
+kernel and input have almost nothing in common. Thus, areas of high
+activity in the feature map indicate, where the input is most similar
+to the kernel. Thinking further about this relationship, it follows
+that the kernel \(K\) itself represents a \textit{feature} in the
+input that every neuron watches out for, which is why the
+convolutional layer is used as a \textit{feature extractor}.
+
+To leverage this procedure even further, each convolution layer does
+not only produce a single activation map for a single feature, but
+repeats the process multiple times with different kernels, yielding a
+stack of activation maps that display the presence of multiple
+features. In addition to the amount of different features to detect,
+there are a few other parameters to adjust in a convolutiona layer.
+A brief overview of all these tunable parameters will be provided in
+the following.
+
+\paragraph{Kernel Size}
+
+The kernel size can be described by the width and the height of each
+neurons' local receptive field. In Eq. \ref{Eq:convolution}, these
+dimensions are denoted by the parameters \(x\) and \(y\). Note that
+the depth of the kernel is always predefined as the depth of the input
+from the previous layer.
+
+\paragraph{Kernel Stride}
+
+Up to this point, we did not yet define how to arrange the local receptive
+fields of the neurons. Introducing a stride parameter, we can set the
+first local field to the region described by a \((0, 0)\) coordinate
+shift (see the \(i\) and \(j\) parameters in
+Eq. \ref{Eq:convolution}). Each consecutive neuron will receive a
+receptive field that is shifted by some amount. To arrange these
+fields, we will first only shift in the direction of the width of the
+input. The amount of shifting in each step is described by the
+x\_stride of the kernel. After shifting across the width is no longer
+possible, the x position of the local receptive field is reset to zero
+and a shift happens in the y direction. This shift can be adjusted by
+the parameter y\_stride. The same procedure is repeated until every
+area of the input is covered by a neuron.
+
+\paragraph{Number of Kernels}
+
+This parameter describes the number of kernels to apply in a
+convolution layer and, as we saw earlier, corresponds to the amount of
+features to detect. Because every kernel results in its own feature
+map, the depth of the output of the convolution layer is equal to the
+number of kernels.
+
+\subsubsection{Pooling Layers}
+
+\subsection{Classification Layers}
+

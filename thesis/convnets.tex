@@ -12,7 +12,8 @@ factor of 3, yielding \(65536 \cdot 3 = 196608\) dimensions total. If
 we wanted to use a fully connected hidden layer with only half as many
 hidden neurons, we would have to optimize \(196608 \cdot 98304 =
 19,327,352,832\) weights only for the first layer. Let us assume that
-storing a single weight in floating point format costs 4 bytes. This
+storing a weight in single precision floating point format
+costs 4 bytes. This
 would lead to spacial requirements of \(19,327,352,832 \cdot 4 =
 77,309,411,328\) bytes or 77.31 gigabytes! One should quickly notice
 that using this kind of neural networks to classify images is beyond
@@ -24,6 +25,7 @@ forward architecture in order to cope with these challenges and how
 these astonishing results are possible.
 
 \section{Overview}
+\label{sec:conv-overview}
 
 One characteristic of fully connected feed forward networks is that
 every neuron in the first hidden layer is connected to every input
@@ -36,19 +38,31 @@ architecture. In Convolutional Neural Networks (CNNs), the goal is to
 reduce the model complexity by making use of the spacial structure of
 the input. This is done by connecting each neuron of the first hidden
 layer only to a locally constrained area of the image. We call this
-area the \textit{local receptive field} of the neuron. Each neuron in
+area the \textit{local receptive field} of the neuron, see
+Fig. \ref{fig:receptive-field}. Each neuron in
 the first hidden layer will receive its own local receptive field of
 inputs that it manages. This way, each hidden neuron is no longer
 fully connected to every input, instead it is only connected to a
 specific part of it. To reduce the complexity of the model even
 further, every hidden neuron of a layer will share its weights and
-biases with all the other neurons of that same layer. Intuitively, this
+biases with all the other neurons of that same layer, drastically
+decreasing the amount of parameters. Intuitively, this
 means that each neuron will look for the same input feature in the
 data, the only difference being the local receptive field the
 individual neurons watch. This concept, also called a
 \textit{convolution layer}, is the main foundation of the CNN
 architecture.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/receptive_field}
+  \caption{Illustration of the local receptive field of the first
+    hidden neuron represented by the grey input units. The weights
+    (depicted by the blue arrows) are shared among the hidden
+    neurons.}
+  \label{fig:receptive-field}
+\end{figure}
 
+\newpage
 \section{The Convolutional Architecture}
 
 The convolutional architecture is composed of three main parts
@@ -62,36 +76,42 @@ The convolutional architecture is composed of three main parts
 These components are stacked on top of each other to successively
 break down the classification task into smaller problems, by first
 extracting the relevant features from the data and then performing
-classification on the basis of these high level features. All the
-relevant layer types are described in more detail within the following
-sections.
+classification on the basis of these high level features.
+All the relevant layer types are described in
+more detail within the following sections.
 
 \subsection{The Input Layer}
 
 Because CNNs are based on spatial assumptions on the input data, it
 has to be arranged in a way that makes optimal use of its
 structure. This is why it is most common to organize the input neurons
-in the form of a two dimensional grid, where each cell resembles a
+in the form of a two dimensional grid as shown in
+Fig. \ref{fig:receptive-field}, where each cell resembles a
 part of the input. In the case of image classification for example,
 one would typically set the \(x\) and \(y\) dimensions of the grid
 equal to the numer of pixels in the input image in the corresponding
 directions. This results in each input neuron in the grid resembling
-one pixel in the image. As was the case with ordinary feed forward
-networks, the input layer does not compute an activation function and
-just passes its signal further into the network.
+one pixel in the image. If multiple input channels are present, one
+would simply add a new layer of input neurons per channel, resulting
+in a three dimensional arrangement. As was the case with ordinary feed
+forward networks, the input layer does not compute an activation
+function and just passes its signal further into the network.
 
 \subsection{Feature Extraction Layers}
 
 \subsubsection{Convolution Layers}
 
-The convolution layer, which was briefly described above, is the main
+The convolution layer, which was briefly described above (see section
+\ref{sec:conv-overview}), is the main
 component of the feature extraction block. It is used to detect
 features across the input by having each neuron watch a specific part
 of it. This can be visualized best by imagining the neurons be
 arranged in a two dimensional grid where each neuron in the grid
-watches a corresponding area in the input (see Fig \ldots). To describe
+watches a corresponding area in the input (see
+Fig. \ref{fig:receptive-field}). To describe
 this behaviour more precisely, we can slightly extend the neural model
-we have already developed for feed forward networks.
+we have already developed for feed forward networks (see section
+\ref{sec:artificial-neurons}).
 
 Recalling that the first component of the basic neural model was the
 weighted sum of the inputs with a set of weights, we can transfer this
@@ -110,7 +130,7 @@ added as usual.
 
 This procedure can also be expressed in terms of mathematical
 equations as follows: Let the width of the kernel \(K\) be \(x_K\), the
-height be \(y_K\) and the depth be \(z\), where \(z\) is usually equal
+height be \(y_K\) and the depth be \(d\), where \(d\) is usually equal
 to the amount of different channels when dealing with images. Let us
 further assume that the local receptive field of the current neuron
 \(k\) can be described by the coordinates \((i, j)\) with respect to
@@ -119,7 +139,7 @@ the input \(X\), where \((i, j)\) indicates the shift of the field in
 adding the bias value \(b\) can be denoted by the following formula:
 \begin{equation}
   \label{Eq:convolution}
-  z_k = \sum_{n=1}^{z}{\sum_{m=1}^{y_K}{\sum_{l=1}^{x_K}{X[i+l, j+m, n] \cdot
+  z_k = \sum_{n=1}^{d}{\sum_{m=1}^{y_K}{\sum_{l=1}^{x_K}{X[i+l, j+m, n] \cdot
         K[l, m, n]}}} + b
 \end{equation}
 This operation is very similar to the concept of convolution in the
@@ -129,7 +149,8 @@ area of signal processing, which is the origin of the name
 After calculating the summation result \(z_k\) for every neuron in the
 grid, an activation function is applied just like in feed forward
 networks. Because of its various advantages, the most common choice is
-the ReLU function which results in the following expression describing the
+the ReLU function (see section \ref{sec:relu}) which results in the
+following expression describing the
 output \(y_k\) of every neuron \(k\) in the grid:
 \begin{equation}
   y_k = max(0, z_k)
@@ -155,34 +176,31 @@ not only produce a single activation map for a single feature, but
 repeats the process multiple times with different kernels, yielding a
 stack of activation maps that display the presence of multiple
 features. In addition to the amount of different features to detect,
-there are a few other parameters to adjust in a convolutiona layer.
+there are a few other parameters to adjust in a convolution layer.
 A brief overview of all these tunable parameters will be provided in
 the following.
 
 \paragraph{Kernel Size}
 
 The kernel size can be described by the width and the height of each
-neurons' local receptive field. In Eq. \ref{Eq:convolution}, these
+neurons' local receptive field, see the grey input neurons in
+Fig. \ref{fig:receptive-field}. In Eq. \ref{Eq:convolution}, these
 dimensions are denoted by the parameters \(x_K\) and \(y_K\). Note that
 the depth of the kernel is always predefined as the depth of the input
 from the previous layer.
 
 \paragraph{Kernel Stride}
 
-Up to this point, we did not yet define how to arrange the local receptive
-fields of the neurons. Introducing a stride parameter, we can set the
-first local field to the region described by a \((0, 0)\) coordinate
-shift (see the \(i\) and \(j\) parameters in
-Eq. \ref{Eq:convolution}). Each consecutive neuron will receive a
-receptive field that is shifted by some amount. To arrange these
-fields, we will first only shift in the \(x\) direction of the
-input. The amount of shifting in each step is described by the
-\textit{x\_stride} of the kernel. After shifting across the \(x\) axis
-is no longer possible, the \(x\) position of the local receptive field is
-reset to zero and a shift happens in the \(y\) direction. This shift
-can be adjusted by the parameter \textit{y\_stride}. The same
-procedure is repeated until every area of the input is covered by a
-neuron.
+This parameter defines how much the local receptive field is shifted
+from one hidden neuron to the next. A stride of one in \(x\) and \(y\)
+direction would indicate that the field is first shifted by one unit
+along the \(x\) dimension and as soon as the end of the input is
+reached, it would be reset to \(x=0\) and shifted one unit along the
+\(y\) dimension. If the stride is smaller than the dimensions of the
+kernel, the local receptive fields of the hidden neurons will overlap.
+In Fig. \ref{fig:receptive-field}, there is a 7x7 grid of hidden
+neurons which indicates that a stride of one in both dimensions was
+used.
 
 \paragraph{Number of Kernels}
 
@@ -215,12 +233,12 @@ adjusted in each pooling layer:
 \end{itemize}
 Due to the fact that the downsampling operation purposefully discards
 information regarding the exact location where the feature was
-detected, this procedure contributes to the \textit{spacial
-  invariance} of convolutional neural network. What this means it that
+detected, this procedure contributes to the \textit{spatial
+  invariance} of convolutional neural networks. What this means it that
 the network is able to recognize certain features, no matter where
-exactly they are in the image. This is one of the most important traits of
-the CNN architecture which greatly contributes to its effectiveness in
-practical applications.
+exactly they are located in the image. This is one of the most
+important traits of the CNN architecture which greatly contributes to
+its effectiveness in practical applications.
 
 \subsection{Classification Layers}
 
@@ -237,3 +255,25 @@ layers right after each other to complete the classification task. As
 usual, the last layer consists of as many output neurons as there are
 classes, employing the softmax activation function to compute the
 classification result.
+
+\section{Summary}
+
+Putting all these layer types together typically results in a
+convolutional architecture that is similar to what is displayed in
+Fig. \ref{fig:convnet}. In this example, the convolution layers as
+well as the pooling layers serve the purpose of feature extraction
+while the fully connected network in the end is used to perform the
+classification task based on the extracted features. Just as described
+in the previous sections, the convolution layers usually yield
+multiple feature maps while the pooling layers just downsample the
+input they are presented with.
+Similar to feed forward networks, these architectures can also be
+trained using the gradient descent algorithm in combination with
+backpropagation.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/convnet}
+  \caption{The typical architecture of a convolutional neural
+    network.}
+  \label{fig:convnet}
+\end{figure}

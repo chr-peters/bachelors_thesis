@@ -16,7 +16,7 @@ them in layers as depicted in Fig. \ref{fig:basic-network}.
 \begin{figure}[h]
   \centering
   \resizebox{0.75\textwidth}{!}{\input{../figures/basic_network}}
-  \caption{A common ANN-structure consisting of three layers of
+  \caption{A common ANN-structure, consisting of three layers of
     neurons represented by a directed graph.}
   \label{fig:basic-network}
 \end{figure}
@@ -100,7 +100,7 @@ basically consists of three components:
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{../figures/single_neuron}
-  \caption{The components of the neural model. This neuron labeled
+  \caption{The components of the neural model. This neuron
     \(k\) receives three input signals that are first multiplied by
     the associated weights, summed up including a bias and then fed
     into an activation function that will determine the ouput signal.}
@@ -121,6 +121,7 @@ As a consequence, the output signal \(y_k\) of neuron \(k\) can be computed by
 applying the activation function \(\phi(\cdot)\) to the output of the
 summation unit which can be described by the following expression:
 \begin{equation}
+  \label{eq:output}
   y_k = \phi(z_k)
 \end{equation}
 
@@ -287,7 +288,7 @@ value as a shift-parameter which can be seen in Fig. \ref{fig:bias}.
   \label{fig:bias}
 \end{figure}
 
-What this shift means is that the bias term acts like a threshold that
+It follows that the bias term acts like a threshold that
 has to be overcome in order for the neuron to become active. Positive
 bias values lead to activity even when the raw input \(a_k\) is still
 negative and negative bias values require bigger input signals in
@@ -310,7 +311,7 @@ algorithm is to predict the label of an instance of the dataset by
 only looking at its features. In order to achieve this, the classifier
 first has to build a model based on a training dataset. This procedure is called
 \textit{training} (see section \ref{sec:training}). In the next step,
-called \textit{testing},the classifier is presented with
+called \textit{testing}, the classifier is presented with
 some new examples that it did not see during training. The classifier
 is tested on these new examples to estimate its performance and to see
 if it was able to learn any concepts from the data, i.e. to
@@ -358,20 +359,20 @@ false negatives can be used to compute the following evaluation
 metrics:\footnote{A collection of these metrics can also be found in
   \cite{Patterson}, see chapter \textit{Evaluating Models}.}
 
-\paragraph{Accuracy} This measurement determines the percentage of
+\paragraph{Accuracy:} The accuracy metric determines the percentage of
 examples in the testing set that the classifier predicted correctly.
 It can be denoted by the following equation:
 \begin{equation}
   Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation}
-This metric works well if there is roughly an equal amount of examples
+This measurement works well if there is roughly an equal amount of examples
 for each class. However, if one of the classes makes up most of the
 examples, the classifier can reach a high degree of accuracy by just
 predicting the label of the dominant class every single time. This
 impairs the significance of this metric when imbalances among the
 classes are present.
 
-\paragraph{Precision} The precision score shows the percentage of
+\paragraph{Precision:} The precision score shows the percentage of
 examples that were correctly classified as positive among all examples
 that the classifier labeled positive:
 \begin{equation}
@@ -384,7 +385,7 @@ that the classifier is right given that it predicted a positive class:
     POSITIVE})
 \end{equation*}
 
-\paragraph{Recall} This measurement remedies the imbalance issues of
+\paragraph{Recall:} This measurement remedies the imbalance issues of
 the accuracy metric by determining the percentage of correctly
 classified examples for each separate class. It can be denoted by the
 following expression:
@@ -398,7 +399,7 @@ classifier is right given a specific class:
   Recall = P(\text{Classifier is right} \vert \text{Class is POSITIVE})
 \end{equation*}
 
-\paragraph{F1 Score} This metric combines precision and recall to
+\paragraph{F1 Score:} This metric combines precision and recall to
 calculate their so called \textit{harmonic mean}. It is often used
 when evaluating classification models, thus its equation is also
 displayed here:
@@ -448,14 +449,14 @@ able to capture all concepts that are present in the data which will
 lead to an opposite effect: \textit{underfitting}. Both overfitting
 and underfitting harm the ability of the network to generalize well
 beyond the training data. In practice however, it is recommended to
-rather have too many hidden neurons and hidden layers than an
+prefer many hidden neurons and hidden layers over an
 insufficient amount, because there are other techniques such as
 \textit{regularization} that punish increasing model complexity to
 prevent overfitting \cite{Bengio}. The first choice of activation
 function that is used in the hidden layers is usually the ReLU (see
 section \ref{sec:relu}) because of its various beneficial properties.
 
-As already hinted at in section \ref{sec:softmax} about the softmax
+As already mentioned in section \ref{sec:softmax} about the softmax
 activation function, it is highly useful if the
 network is able to not only predict the correct label but also to
 indicate how certain it is about it. This is why the output layer will
@@ -527,7 +528,7 @@ in each step \(t\):
 The \(\alpha\) parameter in this equation describes the size of the
 steps that are taken in the direction of the negative gradient and
 is also called the \textit{learning rate} of the network. Choosing a
-reasonable value for \(\alpha\) is essential for a successful trainig
+reasonable value for \(\alpha\) is essential for a successful training
 phase. If the learning rate is too big, the steps taken will also be
 too big resulting in skipping and not finding the minimum. Too small
 values of \(\alpha\) will lead to slow convergence.
@@ -556,8 +557,9 @@ resides. Likewise, the input \(z\), bias \(b\) and weights \(w\) of
 neuron \(k\) in layer \(l\) will also
 receive a superscript denoting the current layer. Using \(n_l\) to
 describe how many neurons there are in layer
-\(l\), we can slightly rewrite the equations that describe the input
-\(z\) and the output \(y\) of a neuron \(k\) like this:
+\(l\), we can slightly rewrite the equations \ref{eq:input} and
+\ref{eq:output} that describe the input
+\(z_k\) and the output \(y_k\) of a neuron \(k\) like this:
 \begin{equation}
   z_k^{(l)} = \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot y_j^{(l-1)}} + b_k^{(l)}
 \end{equation}

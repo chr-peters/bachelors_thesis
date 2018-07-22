@@ -51,8 +51,8 @@ of the model even further, every hidden neuron of a layer will share
 its weights and biases with all the other neurons of that same layer,
 drastically decreasing the amount of parameters. Intuitively, this
 means that each neuron will look for the same input feature in the
-data, the only difference being the local receptive field the
-individual neurons watch. This concept, also called a
+data, the only difference being the local receptive field that each
+individual neuron observes. This concept, also called a
 \textit{convolution layer}, is the main foundation of the CNN
 architecture.
 \begin{figure}[h]
@@ -92,7 +92,7 @@ in the form of a two dimensional grid as shown in
 Fig. \ref{fig:receptive-field}, where each cell resembles a
 part of the input. In the case of image classification for example,
 one would typically set the \(x\) and \(y\) dimensions of the grid
-equal to the numer of pixels in the input image in the corresponding
+equal to the number of pixels in the input image in the corresponding
 directions. This results in each input neuron in the grid resembling
 one pixel in the image. If multiple input channels are present, one
 would simply add a new layer of input neurons per channel, resulting
@@ -104,8 +104,8 @@ function and just passes its signal further into the network.
 
 \subsubsection{Convolution Layers}
 
-The convolution layer, which was briefly described above (see section
-\ref{sec:conv-overview}), is the main
+The convolution layer, which was briefly described above in section
+\ref{sec:conv-overview}, is the main
 component of the feature extraction block. It is used to detect
 features across the input by having each neuron watch a specific part
 of it. This can be visualized best by imagining the neurons be

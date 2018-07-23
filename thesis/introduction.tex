@@ -1,1 +1,34 @@
 \chapter{Introduction}
+
+In order for physical experiments like the ones conducted at the
+CLAS12 particle detector to succeed, highly precise ways of measuring
+particle interactions are required. It is therefore crucial to know in
+time when parts of the experimental setup show signs of deficiency,
+to reduce the effect of distortion introduced by these faulty
+components.
+
+At the CLAS12 particle detector, most of the measurements are
+performed within the CLAS12 drift chamber, a subsystem of the detector
+consisting of 24,192 wires, each designed to capture the presence of
+particles. Due to the extreme conditions within the drift chamber, it
+is common that single wires or collections thereof stop working
+properly during an experimental run. In order to still be able to
+perform accurate computations on the basis of these measurements,
+faulty components have to be detected during runtime and their effects
+have to be filtered out. This task requires huge amounts of data to be
+processed in real time, which makes it infeasible to solve this
+problem based on real time human interaction. An \textit{autonomous}
+way of detecting faults is therefore required.
+
+Luckily though, there is one field which has gained much popularity
+in recent years that happens to lend it self particularly well to
+the task of fault detection: \textit{Artificial
+  Intelligence}. Many powerful algorithms have originated from this
+domain, dominating the benchmarks of challenges such
+as large scale image classification, even reaching human like
+performance \cite{Russakovsky}.
+
+The goal of this thesis is to apply algorithms of artificial
+intelligence and machine learning, namely deep convolutional neural
+networks, to the problem of autonomous fault detection within the
+context of the CLAS12 drift chamber. 

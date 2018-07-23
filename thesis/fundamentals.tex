@@ -1,5 +1,12 @@
 \chapter{Deep Learning Fundamentals}
 
+To lay out a foundation upon which to build in the process of creating
+the fault detection system, the essential principles of deep learning
+will be illustrated within the context of this chapter. The central
+concept that most deep learning algorithms have originated from is the
+\textit{artificial neural network}, which is crucial to understand in
+order to to grasp the core principles of deep learning.
+
 \section{Artificial Neural Networks}
 
 Artificial Neural Networks (ANNs) are a class of machine learning algorithms
@@ -277,10 +284,11 @@ demonstrate the effects of the bias value, we can slightly rewrite it as
 \begin{equation*}
   \phi(a_k) = \frac{1}{1+e^{-(a_k+b_k)}}
 \end{equation*}
-also setting \(\theta = 1\) for demonstration purposes. Plotting the
-activation function for
+also setting \(\theta = 1\) for demonstration purposes.
+
+Plotting the activation function for
 different values of \(b_k\) immediately reveals the effect of the bias
-value as a shift-parameter which can be seen in Fig. \ref{fig:bias}.
+value as a shift-parameter, which can be seen in Fig. \ref{fig:bias}.
 \begin{figure}[h]
   \centering
   \input{../figures/bias}
@@ -465,7 +473,7 @@ will enable us to use the softmax function on this layer to retrieve a
 set of probabilities for each example that is presented to the
 network. The neuron that shows the highest degree of activity,
 i.e. assigns the highest probability, determines the label the network
-will assign to the example as a result of the classification process.
+will assign to the example.
 
 \subsection{Training the Network}
 \label{sec:training}

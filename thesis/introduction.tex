@@ -1,16 +1,17 @@
 \chapter{Introduction}
 
-In order for physical experiments like the ones conducted at the
-CLAS12 particle detector to succeed, highly precise ways of measuring
-particle interactions are required. It is therefore crucial to know in
-time when parts of the experimental setup show signs of deficiency,
-to reduce the effect of distortion introduced by these faulty
-components.
+In order for physical experiments at particle accelerators and
+detectors to succeed, highly precise ways
+of measuring particle interactions are required. It is therefore
+crucial to recognize immediately when parts of the experimental setup
+show signs of deficiency, because these faulty components can lead to
+severe distortions in measurement accuracy.
 
 At the CLAS12 particle detector, most of the measurements are
 performed within the CLAS12 drift chamber, a subsystem of the detector
 consisting of 24,192 wires, each designed to capture the presence of
-particles. Due to the extreme conditions within the drift chamber, it
+particles to reconstruct a particle track. Due to the extreme
+conditions within the drift chamber, it
 is common that single wires or collections thereof stop working
 properly during an experimental run. In order to still be able to
 perform accurate computations on the basis of these measurements,
@@ -18,7 +19,7 @@ faulty components have to be detected during runtime and their effects
 have to be filtered out. This task requires huge amounts of data to be
 processed in real time, which makes it infeasible to solve this
 problem based on real time human interaction. An \textit{autonomous}
-way of detecting faults is therefore required.
+approach of fault detection is therefore required.
 
 Luckily though, there is one field which has gained much popularity
 in recent years that happens to lend it self particularly well to
@@ -31,4 +32,14 @@ performance \cite{Russakovsky}.
 The goal of this thesis is to apply algorithms of artificial
 intelligence and machine learning, namely deep convolutional neural
 networks, to the problem of autonomous fault detection within the
-context of the CLAS12 drift chamber. 
+context of the CLAS12 drift chamber.
+
+After describing the environment presented by the CLAS12 detector and
+the CLAS12 drift chamber in more detail, the fundamentals of deep
+learning will be outlined and the most essential algorithms will be
+derived. Upon this foundation, the central method utilized in the
+scope of this thesis, convolutional neural networks, will be analyzed
+to justify its applicability in the context of fault detection. The
+\textit{deeplearning4j (DL4J)} framework will be used to implement the
+fault detection algorithm which is evaluated afterwards on real fault
+data.

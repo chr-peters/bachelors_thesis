@@ -271,9 +271,13 @@ classification task based on the extracted features. Just as described
 in the previous sections, the convolution layers usually yield
 multiple feature maps while the pooling layers just downsample the
 input they are presented with.
+
 Similar to feed forward networks, these architectures can also be
 trained using the gradient descent algorithm in combination with
-backpropagation.
+backpropagation. During training, the weights and biases of each
+layer, namely the different kernels for the convolution layers, are
+adjusted in order to find a locally optimal configuration that suits
+the classification task well.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{../figures/convnet}

@@ -1,0 +1,83 @@
+\chapter{Implementing the Fault Detector}
+
+After all the baseline foundations of deep learning and convolutional
+neural networks have been derived, it is now time to apply these
+methods to the problem of fault detection in the CLAS12 drift
+chamber. Due to the CLAS12 productive environment heavily relying on
+the JAVA ecosystem, all implementations will be carried out utilizing
+the JAVA programming language as well. The basis of the autonomous
+fault detection system will be formed by the deeplearning4j (DL4J)
+library which will be briefly described in the following section.
+
+\section{The Deeplearning4j Library}
+
+Deeplearning4j is an open-source deep learning library written for the
+JAVA Virtual Machine (JVM). It is supported by the well known
+AI-Startup Skymind and contains implementations of many algorithms
+from the artificial intelligence domain, such as convolutional neural
+networks, that will be used when implementing the fault detector.
+
+To speed up the computations that have to be performed during the
+training of deep convolutional architectures, DL4J relies on its own
+numerical backend engine, ND4J, that contains C++ and Cuda
+implementations of all required operations, most importantly matrix
+multiplications. This way, deep neural networks can be trained on
+big clusters containing multiple CPUs and GPUs, leveraging the huge
+amounts of parallelism introduced by these computational
+architectures.
+
+Additionally, the DL4J library also provides useful mechanisms that
+make monitoring the training process highly accessible, such as
+Web-UIs which offer visual representations of the loss function as
+well as the weight updates during training. Evaluating the trained
+classifier is also not a difficult task, as DL4J provides
+designated classes that are designed to compute all the relevant
+metrics on the training dataset.\footnote{See
+  \url{www.deeplearning4j.org} for more information.}
+
+\section{Data Preparation}
+
+Before the data can be fed into a convolutional neural network, a few
+steps of preparation are necessary. Recall the heatmap plots of
+different faults shown in section \ref{sec:faults}. The data that will
+be presented to the network will be organized in the form of a \(6
+\times 112\) array representing the activation level of each wire in a
+superlayer, similar to the heatmaps. This way, the spatial structure
+that is present within the data is preserved, which is essential when
+working with CNNs, because as shown in section \ref{sec:convnets},
+these architectures heavily depend on structural assumptions on the
+input. Unlike in the case of images, the fault data will only consist
+of a single channel, resulting in an input volume of size \(6
+\times 112 \times 1\).
+
+Due to the fact that activation levels can vary drastically among
+different sectors, sectors far away from the electron beam receiving
+less particles passing by, the data has to be normalized in order to
+compensate for these effects of disproportion. This is done by projecting
+the activation values within each input on a numerical scale between 0
+and 1, the lowest activation ending up at 0, the highest at 1. This
+procedure will make it easier for the network to ignore the
+differences in absolute activation levels and focus more on the local
+fault patterns instead.
+
+\section{The Fault Detection System}
+
+When looking at the examples of various faults that can occur in the
+drift chamber (see section \ref{sec:faults}), it becomes apparent that
+there are usually multiple faults present within a single
+superlayer. To account for this circumstance, multiple CNNs will be
+trained on the fault data, each individual CNN only specializing in
+recognizing a single fault type, thus resulting in a binary classifier
+for each fault. To obtain information on the
+various faults present in the input, each individual CNN is presented
+with the data. In the next step, all the individual responses are
+collected, resulting in a list of faults that were recognized
+within the given superlayer. The network architecture used is similar
+for each CNN that is part of the fault detector and will be described
+in the following section.
+
+\subsection{Network Architecture}
+
+\section{Training the Fault Detector}
+
+\section{Evaluation Results}

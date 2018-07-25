@@ -65,18 +65,60 @@ fault patterns instead.
 When looking at the examples of various faults that can occur in the
 drift chamber (see section \ref{sec:faults}), it becomes apparent that
 there are usually multiple faults present within a single
-superlayer. To account for this circumstance, multiple CNNs will be
+superlayer (see for instance Fig. \ref{fig:dead-connector}, where
+there are a dead connector as well as multiple dead wires present in a
+superlayer). To account for this circumstance, multiple CNNs are
 trained on the fault data, each individual CNN only specializing in
-recognizing a single fault type, thus resulting in a binary classifier
-for each fault. To obtain information on the
-various faults present in the input, each individual CNN is presented
-with the data. In the next step, all the individual responses are
-collected, resulting in a list of faults that were recognized
-within the given superlayer. The network architecture used is similar
-for each CNN that is part of the fault detector and will be described
-in the following section.
+recognizing a single fault type (see section \ref{sec:faults}), thus
+resulting in a binary classifier for each fault. To obtain information
+on the various faults present in a single input, each individual CNN
+is presented with the corresponding data. In the next step, all the
+individual responses are collected, resulting in a list of faults that
+were recognized within the given superlayer. The network architecture
+used is similar for each CNN that is part of the fault detector as
+described in the following section.
 
-\subsection{Network Architecture}
+\subsection{Network Architecture and Configuration}
+
+After the \(6 \times 112 \times 1\) input volume resulting from the
+normalized activations of a superlayer, a convolution layer
+is employed as the first feature extractor of the network. The layer
+uses a kernel size of \(2 \times 3\) which accounts for the slightly
+unsymmetrical dimensions of the input. The total number of kernels
+within this layer, i.e. the amount of features to look for, is set to
+20 and a stride of 1 in each direction is used. The ReLU is applied
+as an activation function within this layer.
+Following the convolution layer, a max-pooling layer is employed with a
+filter size of \(1 \times 2\) and a stride of \(1 \times 2\) as
+well. This is done in order to compress the feature data along the
+``wire''-dimension. After the pooling layer, a single densely
+connected hidden layer with 100 hidden neurons is inserted, utilizing
+the ReLU activation function as well. The output layer consists of two
+output neurons, one firing if the designated fault was detected, the
+other firing if not. The softmax activation function is used on this
+layer to make the ouputs interpretable as probabilities. An
+illustration of the network architecture used in the fault detector
+can be seen in Fig. \ref{fig:fault-architecture}.
+
+The weights and biases of the network are initialized using the xavier
+method (see section \ref{sec:xavier}), ensuring a weight distribution
+that enhances network trainability. The optimization algorithm
+employed is a slight variation of the traditional stochastic gradient
+descent algorithm (see section \ref{sec:training}), called
+ADADELTA. The advantage of this algorithm is that it is able to adjust
+the learning rate during training based on the local characteristics
+of the loss function, resulting in a fairly robust procedure
+\cite{adadelta}. The gradients in each step of the updating process
+are computed using the backpropagation algorithm (see section
+\ref{sec:backpropagation}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[height=.5\textheight]{../figures/fault_architecture}
+  \caption{The architecture of a single CNN in the fault detector that
+  is trained to identify a unique fault type.}
+  \label{fig:fault-architecture}
+\end{figure}
 
 \section{Training the Fault Detector}
 

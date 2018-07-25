@@ -100,7 +100,7 @@ layer to make the ouputs interpretable as probabilities. An
 illustration of the network architecture used in the fault detector
 can be seen in Fig. \ref{fig:fault-architecture}.
 
-The weights and biases of the network are initialized using the xavier
+The weights and biases of the network are initialized using the Xavier
 method (see section \ref{sec:xavier}), ensuring a weight distribution
 that enhances network trainability. The optimization algorithm
 employed is a slight variation of the traditional stochastic gradient
@@ -133,16 +133,37 @@ accordance and fed into the network. In order to avoid overfitting
 are randomly perturbed during training, ensuring that every example
 the classifier is presented with is unique.
 
-Training a single binary classifier was not stopped until the
-classification accuracy (see section
+The training process of a single binary classifier was not stopped
+until the classification accuracy (see section
 \ref{sec:classification-evaluation}) on 10.000 new random examples
 reached 100\%. This procedure was repeated for every single fault
 classifier. The learning curve that plots the model score against the
-number of training examples of the dead wire classifier can be seen in
-[TODO]. We shall see if the procedure of generating new random
-examples during every training step and then training up to a 100\%
-accuracy on new random data successfuly prevented overfitting and
-enabled generalization when evaluating the fault detector on real
-fault data.
+number of training examples of the dead wire classifier as an example
+can be seen in Fig. \ref{fig:learning-curve}, the plots of the other
+classifiers look almost identical and are therefore omitted. It
+strikes the eye that the optimization algorithm seems to step through
+rough terrain in the parameter space, as there are multiple spikes
+occuring before convergence finally sets in. This is most likely due
+to the fact that a batch size (see section \ref{sec:training}) of one
+was used during optimization, conciously inducing the spikes. This was
+done to add more variation to the optimization process, increasing
+the likelihood that a minimum will eventually be found. It should be
+noted that bigger batch sizes of more than 20 examples were tested as
+well, resulting in stagnation of the optimization procedure and not
+leading to convergence. For this problem, it turned out, more noise
+was helpful during training.
+
+We shall see if the procedure of generating new random examples during every
+training step and then training up to a 100\% accuracy on new random
+data actually lead to generalization when evaluating the fault
+detector on real fault data.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{../figures/score_test}
+  \caption{The learning curve of the dead wire fault classifier
+    shows many rough spikes but eventually leads to convergence.}
+  \label{fig:learning-curve}
+\end{figure}
 
 \section{Evaluation Results}

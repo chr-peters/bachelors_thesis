@@ -725,21 +725,31 @@ algorithm for a single training example \(x\) as shown in Algorithm \ref{algo:ba
     \State\textbf{return }\(\nabla L_x(w, b)\)\Comment{Return the gradient of \(L_x\)}
   \end{algorithmic}
 \end{algorithm}
-
 This procedure is repeated for every example \(x\) and the average of
 the computed gradients determines the direction of each step during
 gradient descent.
+
+\subsubsection{Stochastic Gradient Descent}
+\label{sec:stochastic}
 
 It should be noted that there are several extensions to the algorithm
 of gradient descent. One very popular variation called
 \textit{stochastic gradient descent} \cite{Bottou} does not compute the
 gradient with respect to every single example, but divides the whole
-dataset into separate randomly sampled batches instead. Each batch is
+dataset into separate randomly sampled batches instead, resulting in
+an approximation of the gradient of the total loss with respect to
+every example in the dataset. Each batch is
 then used to take a step of gradient descent by
-computing the average gradient of all the examples in the batch.
-This is done to speed up the process of learning by not
+computing the average gradient of all the examples in the batch, which
+is done to speed up the process of learning by not
 having to iterate over the whole dataset to take one step in the
-parameter space.
+parameter space. The size of of a batch in stochastic
+gradient descent controls the quality of the approximation. Small
+batch-sizes lead to noisier gradient updates as they are more
+sensitive to single examples while bigger batch sizes lead to smoother
+optimization. It is not always advantageous however, to use a big
+batch size, as this sometimes leads to slow training and stagnation of
+the updating procedure.
 
 \subsection{When to Stop Training}
 

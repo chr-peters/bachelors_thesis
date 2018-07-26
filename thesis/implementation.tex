@@ -64,12 +64,13 @@ fault patterns instead.
 
 When looking at the examples of various faults that can occur in the
 drift chamber (see section \ref{sec:faults}), it becomes apparent that
-there are usually multiple faults present within a single
+there are usually multiple faults happening within a single
 superlayer (see for instance Fig. \ref{fig:dead-connector}, where
-there are a dead connector as well as multiple dead wires present in a
-superlayer). To account for this circumstance, multiple CNNs are
+there are a dead connector as well as multiple dead wires present in
+the data). To account for this circumstance, multiple CNNs are
 trained on the fault data, each individual CNN only specializing in
-recognizing a single fault type (see section \ref{sec:faults}), thus
+recognizing a single fault type (see section \ref{sec:faults} for a
+summary of the different fault types), thus
 resulting in a binary classifier for each fault. To obtain information
 on the various faults present in a single input, each individual CNN
 is presented with the corresponding data. In the next step, all the
@@ -82,12 +83,12 @@ described in the following section.
 
 After the \(6 \times 112 \times 1\) input volume resulting from the
 normalized activations of a superlayer, a convolution layer
-is employed as the first feature extractor of the network. The layer
-uses a kernel size of \(2 \times 3\) which accounts for the slightly
+is inserted as the first feature extractor of the network. The layer
+uses a kernel size of \(2 \times 3\) which accounts for the
 unsymmetrical dimensions of the input. The total number of kernels
 within this layer, i.e. the amount of features to look for, is set to
 20 and a stride of 1 in each direction is used. The ReLU is applied
-as an activation function within this layer.
+as an activation function to this layer.
 Following the convolution layer, a max-pooling layer is employed with a
 filter size of \(1 \times 2\) and a stride of \(1 \times 2\) as
 well. This is done in order to compress the feature data along the
@@ -102,12 +103,13 @@ can be seen in Fig. \ref{fig:fault-architecture}.
 
 The weights and biases of the network are initialized using the Xavier
 method (see section \ref{sec:xavier}), ensuring a weight distribution
-that enhances network trainability. The optimization algorithm
-employed is a slight variation of the traditional stochastic gradient
-descent algorithm (see section \ref{sec:training}), called
-ADADELTA. The advantage of this algorithm is that it is able to adjust
-the learning rate during training based on the local characteristics
-of the loss function, resulting in a fairly robust procedure
+that enhances network trainability. As for the optimization algorithm,
+a slight variation of the traditional stochastic gradient
+descent algorithm (see section \ref{sec:stochastic}) is employed,
+called ADADELTA. The advantage of this algorithm is that it is able to
+adjust the learning rate during training based on the local
+characteristics of the loss function by scaling the gradients based on
+previous updates, resulting in a fairly robust procedure
 \cite{adadelta}. The gradients in each step of the updating process
 are computed using the backpropagation algorithm (see section
 \ref{sec:backpropagation}).
@@ -133,10 +135,10 @@ accordance and fed into the network. In order to avoid overfitting
 are randomly perturbed during training, ensuring that every example
 the classifier is presented with is unique.
 
-The training process of a single binary classifier was not stopped
+The training process of a single binary classifier is not stopped
 until the classification accuracy (see section
 \ref{sec:classification-evaluation}) on 10.000 new random examples
-reached 100\%. This procedure was repeated for every single fault
+reaches 100\%. This procedure is repeated for every single fault
 classifier. The learning curve that plots the model score against the
 number of training examples of the dead wire classifier as an example
 can be seen in Fig. \ref{fig:learning-curve}, the plots of the other
@@ -144,9 +146,9 @@ classifiers look almost identical and are therefore omitted. It
 strikes the eye that the optimization algorithm seems to step through
 rough terrain in the parameter space, as there are multiple spikes
 occuring before convergence finally sets in. This is most likely due
-to the fact that a batch size (see section \ref{sec:training}) of one
-was used during optimization, conciously inducing the spikes. This was
-done to add more variation to the optimization process, increasing
+to the fact that a batch size (see section \ref{sec:stochastic}) of
+one was used during optimization, conciously inducing the spikes to
+add more variation to the optimization process, increasing
 the likelihood that a minimum will eventually be found. It should be
 noted that bigger batch sizes of more than 20 examples were tested as
 well, resulting in stagnation of the optimization procedure and not

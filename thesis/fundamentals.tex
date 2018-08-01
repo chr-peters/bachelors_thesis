@@ -487,8 +487,8 @@ training examples it is presented with.
 Let \(x\) be an example input from the training dataset and \(y'(x)\)
 be the desired output of the network that corresponds to the
 example. Both \(x\) and \(y'(x)\) are vectors. The element \(x_i\) represents the
-input signal of the \(i^{th}\) input neuron and the element \(y_i'(x)\)
-represents the desired activation of the \(i^{th}\) output neuron. To
+input signal of the \(i^{th}\) input neuron and the element \(y_j'(x)\)
+represents the desired activation of the \(j^{th}\) output neuron. To
 measure how close the actual output \(y(x)\) of the network is to the
 desired output \(y'(x)\), we can use the \textit{sum of the squared
   errors}:
@@ -569,8 +569,9 @@ neuron \(k\) in layer \(l\) will also
 receive a superscript denoting the current layer. Using \(n_l\) to
 describe how many neurons there are in layer
 \(l\), we can slightly rewrite the equations \ref{eq:input} and
-\ref{eq:output} that describe the input
-\(z_k\) and the output \(y_k\) of a neuron \(k\) like this:
+\ref{eq:output} that describe the activation function input
+\(z_k\), which is the output of the summation unit, and the output
+\(y_k\) of a neuron \(k\) like this:
 \begin{equation}
   z_k^{(l)} = \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot y_j^{(l-1)}} + b_k^{(l)}
 \end{equation}
@@ -597,15 +598,16 @@ in its summation
 unit, it is helpful to take an intermediate step: Rather than
 computing the partial derivatives directly, it makes sense to think
 about how changes
-in the input \(z_k^{(l)}\)
+in the summed input \(z_k^{(l)}\)
 of a particular neuron in the network impact the loss \(L_x\). This
-sensitivity of the loss function with respect to the input of a
+sensitivity of the loss function with respect to the summed input of a
 particular neuron will be dentoted by the following equation:
 \begin{equation}
   \delta_k^{(l)} = \frac{\partial L_x}{\partial z_k^{(l)}}
 \end{equation}
 where \(\delta_k^{(l)}\) describes the sensitivity of the loss function
-with respect to changes in the input of neuron \(k\) in layer \(l\).
+with respect to changes in the summed input of neuron \(k\) in layer
+\(l\).
 
 Utilizing the \textit{chain rule} of calculus, one can now write the
 partial derivatives of the loss function with respect to the weights
@@ -640,8 +642,8 @@ b_k^{(l)} = y_j^{(l-1)}
 b_k^{(l)} = 1
 \end{equation}
 Now the only component that is left to be calculated is the
-sensitivity of the loss with respect to the input of each neuron,
-\(\delta_k^{(l)}\).
+sensitivity of the loss with respect to the summed input of each
+neuron, \(\delta_k^{(l)}\).
 In order to compute this value, two cases have to be distinguished:
 First, if \(l\) is the output layer, \(\delta_k^{(l)}\) will only
 influence the loss through one single neuron \(k\). Keeping this in
@@ -697,8 +699,7 @@ algorithm for a single training example \(x\) as shown in Algorithm \ref{algo:ba
     \For{each layer \(l=2,\ldots,n\)}\Comment{Feed the input through the network}
       \For{each neuron \(k\) in \(l\)}
         \State \(z_k^{(l)}\gets \sum_{j=1}^{n_{l-1}}{w_{kj}^{(l)} \cdot
-          y_j^{(l-1)}} + b_k^{(l)}\)\Comment{Compute the input of each
-        neuron}
+          y_j^{(l-1)}} + b_k^{(l)}\)\Comment{Compute the summed input}
         \State \(y_k^{(l)}\gets \phi(z_k^{(l)})\)\Comment{Compute the
           activation}
       \EndFor

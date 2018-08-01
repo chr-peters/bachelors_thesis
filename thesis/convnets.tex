@@ -224,11 +224,15 @@ resulting in a smaller input grid for the next layer. Quite similar to
 convolution layers, a pooling layer can also be imagined as a filter
 that runs over the input, but instead of computing dot products, this
 filter only returns the maximum value of the region it is currently
-looking at. This technique is also known as
-\textit{max-pooling}. Unlike convolution layers however, pooling
-layers do not influence the depth of the input because each feature
-map is processed separately. There are two parameters that can be
-adjusted in each pooling layer:
+looking at (see Fig. \ref{fig:pooling}). This technique is also known
+as \textit{max-pooling}. It should be noted that there exist
+alternative techniques such as average-pooling, where the average of a
+region is computed and not the maximum, however max-pooling has proved
+itself as the most effective pooling algorithm in practical
+applications. Unlike convolution
+layers, pooling layers do not influence the depth of the input
+because each feature map is processed separately. There are two
+parameters that can be adjusted in each pooling layer:
 \begin{itemize}
   \item \textbf{Size:} This parameter controls the size of the filter
     that is used for downsampling.
@@ -244,6 +248,13 @@ the network is able to recognize certain features, no matter where
 exactly they are located in the image. This is one of the most
 important traits of the CNN architecture which greatly contributes to
 its effectiveness in practical applications.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{../figures/pooling}
+  \caption{Illustration of the max-pooling procedure on a single activation map.}
+  \label{fig:pooling}
+\end{figure}
 
 \subsection{Classification Layers}
 

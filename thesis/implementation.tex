@@ -4,10 +4,10 @@ After all the baseline foundations of deep learning and convolutional
 neural networks have been derived, it is now time to apply these
 methods to the problem of fault detection in the CLAS12 drift
 chamber. Due to the CLAS12 productive environment heavily relying on
-the JAVA ecosystem, all implementations will be carried out utilizing
+the JAVA ecosystem, all implementations are carried out utilizing
 the JAVA programming language as well. The basis of the autonomous
-fault detection system will be formed by the deeplearning4j (DL4J)
-library which will be briefly described in the following section.
+fault detection system is formed by the deeplearning4j (DL4J)
+library which is briefly described in the following section.
 
 \section{The Deeplearning4j Library}
 
@@ -51,7 +51,7 @@ of a single channel, resulting in an input volume of size \(6
 \times 112 \times 1\).
 
 Due to the fact that activation levels can vary drastically among
-different sectors, sectors far away from the electron beam receiving
+different regions, regions far away from the electron beam receiving
 less particles passing by, the data has to be normalized in order to
 compensate for these effects of disproportion. This is done by projecting
 the activation values within each input on a numerical scale between 0
@@ -92,7 +92,7 @@ as an activation function to this layer.
 Following the convolution layer, a max-pooling layer is employed with a
 filter size of \(1 \times 2\) and a stride of \(1 \times 2\) as
 well. This is done in order to compress the feature data along the
-``wire''-dimension. After the pooling layer, a single densely
+``wire''-dimension. After the pooling layer, a single fully
 connected hidden layer with 100 hidden neurons is inserted, utilizing
 the ReLU activation function as well. The output layer consists of two
 output neurons, one firing if the designated fault was detected, the
@@ -296,10 +296,10 @@ The confusion matrix of the dead channel classifier can be found in Table
 
 \paragraph{Hot Wire Classifier:}
 \begin{itemize}
-  \item Accuracy: \ldots
-  \item Precision: \ldots
-  \item Recall: \ldots
-  \item F-Measure: \ldots
+  \item Accuracy: 100.00\%
+  \item Precision: 100.00\%
+  \item Recall: 100.00\%
+  \item F-Measure: 100.00\%
 \end{itemize}
 The confusion matrix of the hot wire classifier can be found in Table
 \ref{tbl:confusion-hotwire}.
@@ -310,11 +310,9 @@ The confusion matrix of the hot wire classifier can be found in Table
     \hline
     & \thead{Hot Wire\\(Predicted)} & \thead{No Hot Wire\\(Predicted)} \\
     \hline
-    \thead{Hot Wire\\(Actual)} & True Positives (TP) & False
-    Negatives (FN) \\
+    \thead{Hot Wire\\(Actual)} & 5510 & 0\\
     \hline
-    \thead{No Hot Wire\\(Actual)} & False Positives (FP) & True
-    Negatives (TN) \\
+    \thead{No Hot Wire\\(Actual)} & 0 & 4490\\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the hot wire classifier.}

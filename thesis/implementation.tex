@@ -4,8 +4,8 @@ After all the baseline foundations of deep learning and convolutional
 neural networks have been derived, it is now time to apply these
 methods to the problem of fault detection in the CLAS12 drift
 chamber. Due to the CLAS12 productive environment heavily relying on
-the JAVA ecosystem, all implementations are carried out utilizing
-the JAVA programming language as well. The basis of the autonomous
+the JAVA programming language, all implementations are carried out
+utilizing JAVA as well. The basis of the autonomous
 fault detection system is formed by the deeplearning4j (DL4J)
 library which is briefly described in the following section.
 
@@ -77,40 +77,77 @@ is presented with the corresponding data. In the next step, all the
 individual responses are collected, resulting in a list of faults that
 were recognized within the given superlayer. The network architecture
 used is similar for each CNN that is part of the fault detector as
-described in the following section.
+described in the following sections.
+
+\subsection{Finding the Right Architecture}
+
+One of the most challenging tasks when applying deep learning is to
+find a set of suitable parameters that describe the network
+architecture. These parameters, e.g. number of hidden layers, kernel
+size of convolution layers, activation functions, learning rate,
+\ldots are also refered to as \textit{hyperparameters}, because they
+are set in advance and are not learned by the network during training.
+In practice, the most common approach of finding the right
+setup is to try many different architectures and configurations
+and stick to those that work best.
+
+While designing the network that is used in the fault detector, the
+simplest models, consisting of only a single convolution layer
+followed by a pooling layer and fully connected layers, were tested
+first. While working well with faults that are easily recognizable,
+such as a dead channel, those models failed to capture the more
+complex mechanisms of fault detection like dead wires. The dead wire
+fault turned out to be the most complex of all because it
+can basically appear everywhere, even next to each other. To cope with
+these challenges, a deeper
+architecture with six layers was used which was able to successfully
+capture all the peculiarities associated with the various faults. This
+architecture resulting from the process of testing multiple
+combinations of hyperparameters is presented in the next section.
 
 \subsection{Network Architecture and Configuration}
 
 After the \(6 \times 112 \times 1\) input volume resulting from the
 normalized activations of a superlayer, a convolution layer
-is inserted as the first feature extractor of the network. The layer
+is inserted as the first feature extractor of the network (see
+Fig. \ref{fig:fault-architecture}). The layer
 uses a kernel size of \(2 \times 3\) which accounts for the
 unsymmetrical dimensions of the input. The total number of kernels
 within this layer, i.e. the amount of features to look for, is set to
-20 and a stride of 1 in each direction is used. The ReLU is applied
-as an activation function to this layer.
-Following the convolution layer, a max-pooling layer is employed with a
-filter size of \(1 \times 2\) and a stride of \(1 \times 2\) as
-well. This is done in order to compress the feature data along the
-``wire''-dimension. After the pooling layer, a single fully
-connected hidden layer with 100 hidden neurons is inserted, utilizing
-the ReLU activation function as well. The output layer consists of two
+40 and a stride of 1 in each direction is used. The ReLU is applied
+as an activation function to this layer. Another convolution layer is
+inserted afterwards, this time using 30 kernels of size \(2 \times
+2\), also setting stride to one. The second convolution layer is
+designed to search for higher level features by scanning the
+activation maps of the first convolution layer.
+Following these layers, a max-pooling layer is
+employed with a filter size of \(2 \times 2\) and a stride of \(2
+\times 2\) as well. This is done in order to compress the feature data
+and contribute to the spatial invariance of the network (see section
+\ref{sec:pooling}). Another convolution layer with 20
+kernels of size \(2 \times 2\) is inserted next, scanning for even
+higher level features in the downsampled output of the pooling
+layer. Afterwards, a single fully
+connected hidden layer with 100 hidden neurons is employed, utilizing
+the ReLU activation function. The output layer consists of two
 output neurons, one firing if the designated fault was detected, the
 other firing if not. The softmax activation function is used on this
-layer to make the ouputs interpretable as probabilities. An
-illustration of the network architecture used in the fault detector
-can be seen in Fig. \ref{fig:fault-architecture}.
+layer to make the ouputs interpretable as probabilities. Overall, this
+architecture results in a total of 113,182 parameters (weights and
+biases) that have to be adjusted during training.
 
 The weights and biases of the network are initialized using the Xavier
 method (see section \ref{sec:xavier}), ensuring a weight distribution
 that enhances network trainability. As for the optimization algorithm,
 a slight variation of the traditional stochastic gradient
 descent algorithm (see section \ref{sec:stochastic}) is employed,
-called ADADELTA. The advantage of this algorithm is that it is able to
-adjust the learning rate during training based on the local
+called ADAM. The advantage of this algorithm is that it is able to
+adjust the learning rate during training depending on the local
 characteristics of the loss function by scaling the gradients based on
-previous updates, resulting in a fairly robust procedure
-\cite{adadelta}. The gradients in each step of the updating process
+previous updates, resulting in a robust procedure for the training of
+convolutional neural networks. It's default learning rate of 0.001
+proved to be sufficient for the training task.
+\cite{adam}. The gradients in each step of the updating process
 are computed using the backpropagation algorithm (see section
 \ref{sec:backpropagation}).
 
@@ -125,15 +162,16 @@ are computed using the backpropagation algorithm (see section
 \section{Training the Fault Detector}
 
 In order to train the fault detector as a whole, every single binary
-CNN is trained in isolation on a collection containing 50,000 positive
+CNN was trained in isolation on a collection containing 50,000 positive
 as well as negative examples of the fault type that it is supposed to
-detect. The data used during training is
+detect. The data used during training was
 generated by a simulation suite that works on real fault-free heatmaps
 and inserts random combinations of faults which are then labeled in
 accordance and fed into the network. In order to avoid overfitting
 (see section \ref{sec:classification-architecture}), the wire activations
-are randomly perturbed during training, ensuring that every example
-the classifier is presented with is unique.
+were randomly perturbed by the simulation suite during training,
+ensuring that every example the classifier was presented with was
+unique.
 
 The learning curve that plots the model score against the
 number of training examples of the dead wire classifier as an example
@@ -159,6 +197,8 @@ was helpful during training.
   \label{fig:learning-curve}
 \end{figure}
 
+\clearpage
+
 \subsection{Training Results}
 
 The training performance of every single binary classifier was
@@ -169,10 +209,10 @@ presented in the following paragraphs.
 
 \paragraph{Dead Wire Classifier:}
 \begin{itemize}
-  \item Accuracy: \ldots
-  \item Precision: \ldots
-  \item Recall: \ldots
-  \item F-Measure: \ldots
+  \item Accuracy: 97.61\%
+  \item Precision: 99.96\%
+  \item Recall: 95.65\%
+  \item F-Measure: 97.76\%
 \end{itemize}
 The confusion matrix of the dead wire classifier can be found in Table
 \ref{tbl:confusion-deadwire}.
@@ -183,11 +223,9 @@ The confusion matrix of the dead wire classifier can be found in Table
     \hline
     & \thead{Dead Wire\\(Predicted)} & \thead{No Dead Wire\\(Predicted)} \\
     \hline
-    \thead{Dead Wire\\(Actual)} & True Positives (TP) & False
-    Negatives (FN) \\
+    \thead{Dead Wire\\(Actual)} & 5212 & 237\\
     \hline
-    \thead{No Dead Wire\\(Actual)} & False Positives (FP) & True
-    Negatives (TN) \\
+    \thead{No Dead Wire\\(Actual)} & 2 & 4549\\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the dead wire classifier.}
@@ -196,10 +234,10 @@ The confusion matrix of the dead wire classifier can be found in Table
 
 \paragraph{Dead Pin Classifier:}
 \begin{itemize}
-  \item Accuracy: 99.93\%
-  \item Precision: 100.00\%
-  \item Recall: 99.85\%
-  \item F-Measure: 99.92\%
+  \item Accuracy: 99.95\%
+  \item Precision: 99.92\%
+  \item Recall: 99.98\%
+  \item F-Measure: 99.95\%
 \end{itemize}
 The confusion matrix of the dead pin classifier can be found in Table
 \ref{tbl:confusion-pin}.
@@ -210,9 +248,9 @@ The confusion matrix of the dead pin classifier can be found in Table
     \hline
     & \thead{Dead Pin\\(Predicted)} & \thead{No Dead Pin\\(Predicted)} \\
     \hline
-    \thead{Dead Pin\\(Actual)} & 4799 & 7\\
+    \thead{Dead Pin\\(Actual)} & 4739 & 1\\
     \hline
-    \thead{No Dead Pin\\(Actual)} & 0 & 5194\\
+    \thead{No Dead Pin\\(Actual)} & 4 & 5256\\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the dead pin classifier.}
@@ -221,10 +259,10 @@ The confusion matrix of the dead pin classifier can be found in Table
 
 \paragraph{Dead Connector Classifier:}
 \begin{itemize}
-  \item Accuracy: 98.43\%
-  \item Precision: 98.37\%
-  \item Recall: 95.21\%
-  \item F-Measure: 96.79\%
+  \item Accuracy: \%
+  \item Precision: \%
+  \item Recall: \%
+  \item F-Measure: \%
 \end{itemize}
 The confusion matrix of the dead connector classifier can be found in
 Table \ref{tbl:confusion-connector}.
@@ -235,9 +273,9 @@ Table \ref{tbl:confusion-connector}.
     \hline
     & \thead{Dead Connector\\(Predicted)} & \thead{No Dead Connector\\(Predicted)} \\
     \hline
-    \thead{Dead Connector\\(Actual)} & 2347 & 118 \\
+    \thead{Dead Connector\\(Actual)} & & \\
     \hline
-    \thead{No Dead Connector\\(Actual)} & 39 & 7496 \\
+    \thead{No Dead Connector\\(Actual)} & & \\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the dead connector classifier.}
@@ -246,10 +284,10 @@ Table \ref{tbl:confusion-connector}.
 
 \paragraph{Dead Fuse Classifier:}
 \begin{itemize}
-  \item Accuracy: 99.02\%
-  \item Precision: 98.61\%
-  \item Recall: 97.18\%
-  \item F-Measure: 97.89\%
+  \item Accuracy: \%
+  \item Precision: \%
+  \item Recall: \%
+  \item F-Measure: \%
 \end{itemize}
 The confusion matrix of the dead fuse classifier can be found in Table
 \ref{tbl:confusion-fuse}.
@@ -260,9 +298,9 @@ The confusion matrix of the dead fuse classifier can be found in Table
     \hline
     & \thead{Dead Fuse\\(Predicted)} & \thead{No Dead Fuse\\(Predicted)} \\
     \hline
-    \thead{Dead Fuse\\(Actual)} & 2272 & 66\\
+    \thead{Dead Fuse\\(Actual)} & & \\
     \hline
-    \thead{No Dead Fuse\\(Actual)} & 32 & 7630\\
+    \thead{No Dead Fuse\\(Actual)} & & \\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the dead fuse classifier.}
@@ -271,10 +309,10 @@ The confusion matrix of the dead fuse classifier can be found in Table
 
 \paragraph{Dead Channel Classifier:}
 \begin{itemize}
-  \item Accuracy: 99.04\%
-  \item Precision: 97.91\%
-  \item Recall: 99.44\%
-  \item F-Measure: 98.67\%
+  \item Accuracy: \%
+  \item Precision: \%
+  \item Recall: \%
+  \item F-Measure: \%
 \end{itemize}
 The confusion matrix of the dead channel classifier can be found in Table
 \ref{tbl:confusion-channel}.
@@ -285,9 +323,9 @@ The confusion matrix of the dead channel classifier can be found in Table
     \hline
     & \thead{Dead Channel\\(Predicted)} & \thead{No Dead Channel\\(Predicted)} \\
     \hline
-    \thead{Dead Channel\\(Actual)} & 3552 & 20\\
+    \thead{Dead Channel\\(Actual)} & & \\
     \hline
-    \thead{No Dead Channel\\(Actual)} & 76 & 6352\\
+    \thead{No Dead Channel\\(Actual)} & & \\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the dead channel classifier.}
@@ -310,9 +348,9 @@ The confusion matrix of the hot wire classifier can be found in Table
     \hline
     & \thead{Hot Wire\\(Predicted)} & \thead{No Hot Wire\\(Predicted)} \\
     \hline
-    \thead{Hot Wire\\(Actual)} & 5510 & 0\\
+    \thead{Hot Wire\\(Actual)} & 5532 & 0\\
     \hline
-    \thead{No Hot Wire\\(Actual)} & 0 & 4490\\
+    \thead{No Hot Wire\\(Actual)} & 0 & 4468\\
     \hline
   \end{tabular}
   \caption{Confusion matrix of the hot wire classifier.}

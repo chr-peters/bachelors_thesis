@@ -216,6 +216,7 @@ map, the depth of the output of a convolution layer is equal to its
 number of kernels.
 
 \subsubsection{Pooling Layers}
+\label{sec:pooling}
 
 Pooling layers are usually inserted after convolution layers to capture
 the most essential patterns of the feature maps in order to reduce
@@ -252,7 +253,9 @@ its effectiveness in practical applications.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.5\textwidth]{../figures/pooling}
-  \caption{Illustration of the max-pooling procedure on a single activation map.}
+  \caption{Illustration of the max-pooling procedure on a single
+    activation map. The filter size is \(2 \times 2\) and a stride of
+    2 is used in each direction.}
   \label{fig:pooling}
 \end{figure}
 

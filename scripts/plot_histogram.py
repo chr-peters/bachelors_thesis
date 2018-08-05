@@ -4,7 +4,7 @@ import numpy as np
 import re
 
 import matplotlib
-#matplotlib.use('WxAgg')
+matplotlib.use('WxAgg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
@@ -35,17 +35,17 @@ def get_data(fileName):
 
 if __name__ == '__main__':
 
-    fileName = 'histograms/hot_wire.txt'
+    fileName = 'validation/val_s2_sl6.txt'
 
-    baseline = get_data('histograms/baseline_signal.txt')
-    fuse_mask = get_data('histograms/channel_mask.txt')
+    #baseline = get_data('histograms/baseline_signal.txt')
+    #fuse_mask = get_data('histograms/channel_mask.txt')
 
     # add random dead wires
-    baseline[np.random.rand(112, 6) < 0.03] = 0
+    #baseline[np.random.rand(112, 6) < 0.03] = 0
 
     # apply the mask to the data
-    baseline[fuse_mask > 0] = 0
-    data = baseline
+    #baseline[fuse_mask > 0] = 0
+    data = get_data(fileName)
 
     # rotate data befor plotting
     data = np.rot90(data, k=1)
@@ -59,9 +59,10 @@ if __name__ == '__main__':
     # dead pin: rect = patches.Rectangle((14, 0.5), 12, 2, linewidth=2, edgecolor='blue', facecolor='none')
     # dead connector: rect = patches.Rectangle((27, 0), 8, 6, linewidth=2, edgecolor='blue', facecolor='none')
     # dead wire: rect = patches.Rectangle((80, 3.5), 9, 2, linewidth=2, edgecolor='blue', facecolor='none')
-    # hot wire: rect = patches.Rectangle((1, 1.5), 7, 2, linewidth=2, edgecolor='blue', facecolor='none')
-    rect = patches.Rectangle((60, 0), 24, 6, linewidth=2, edgecolor='blue', facecolor='none')
-    ax.add_patch(rect)
+    # hot wire:
+    #rect = patches.Rectangle((1, 1.5), 7, 2, linewidth=2, edgecolor='blue', facecolor='none')
+    #rect = patches.Rectangle((60, 0), 24, 6, linewidth=2, edgecolor='blue', facecolor='none')
+    #ax.add_patch(rect)
     
     plt.tight_layout()
     plt.show()

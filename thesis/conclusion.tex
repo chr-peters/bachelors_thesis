@@ -7,8 +7,9 @@ drift chamber. As a result, a fully functional fault detection system
 consisting of multiple CNNs was implemented and tested on real fault
 data, only struggling with faults that show little contrast in terms
 of wire activations. This issue can be remedied in the future however,
-by improving the simulation suite to generate more of these examples
-during training. After all, a detection system based on deep learning
+by presenting the classifier with more of these examples
+during training, using real data containing blurred faults as
+well. After all, a detection system based on deep learning
 can only be as good as the data it was trained on.
 
 Nevertheless, there are some further aspects that will have to be
@@ -24,16 +25,17 @@ the YOLOv3 object detection system, a convolutional neural network
 which is able to predict the position of an object within an image
 \cite{yolo}. Further work could include applying such a concept to the
 problem of fault localization, using the system implemented in
-this thesis as a pre stage classifier to determine which faults are
+this thesis as a pre-stage classifier to determine which faults are
 present in a superlayer before applying the more computationally
 expensive fault localization procedure.
 
 Lastly, it remains to be tested how the implemented fault detector
-will perform when presented with large scale datasets that accrue over
-donzens of experiments. It is always possible that some new surprises
-are present within the hundreds of terabytes of experimental data that
-reside on the clusters of the CLAS12 project. Based on the promising
-results that originated from the testing and evaluating performed
-during this thesis however, a high degree of confidence seems to be
+will perform when presented with large scale datasets that will accrue over
+the next 20 years of approved CLAS12 operations. It is always possible
+that some new surprises are present within the hundreds of petabytes
+of experimental data that reside on the clusters of the CLAS12
+project. Based on the promising results that originated from testing
+and validating, performed
+during this thesis, a high degree of confidence can be
 justified when it comes to putting the fault detector to the test on
 real time CLAS12 drift chamber data.

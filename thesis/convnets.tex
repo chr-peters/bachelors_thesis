@@ -21,9 +21,10 @@ that using this kind of neural networks to classify images is beyond
 infeasible. But how is it possible that state-of-the-art classifiers
 achieve human like performance in image classification, also
 relying on artificial neural networks \cite{Russakovsky}? In the
-following sections, we will explain how to modify our current feed
+following sections, it will explained how to modify our current feed
 forward architecture in order to cope with these challenges and how
-these astonishing results are possible.
+these astonishing results are possible, yielding the foundations of
+the central component of the fault detection system.
 
 \section{Overview}
 \label{sec:conv-overview}
@@ -124,7 +125,7 @@ filter that each neuron applies to its local receptive field. This
 filter, that we will also refer to as a kernel, can be described by a
 stack of matrices of equal dimensions, where each matrix consists of
 the weights that are applied to the local region in the input within
-one channel. The amount of matrixes stacked corresponds to the depth
+one channel. The amount of matrices stacked corresponds to the depth
 of the input data. When dealing with images, this would be the same as
 the amount of channels (e.g. RGB has three color channels, thus the
 kernel would consist of three stacked matrices). To compute the

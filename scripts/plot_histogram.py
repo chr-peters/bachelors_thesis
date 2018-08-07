@@ -4,7 +4,7 @@ import numpy as np
 import re
 
 import matplotlib
-matplotlib.use('WxAgg')
+#matplotlib.use('WxAgg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
@@ -35,7 +35,7 @@ def get_data(fileName):
 
 if __name__ == '__main__':
 
-    fileName = 'validation/val_s2_sl6.txt'
+    fileName = 'validation/val_s2_sl2.txt'
 
     #baseline = get_data('histograms/baseline_signal.txt')
     #fuse_mask = get_data('histograms/channel_mask.txt')

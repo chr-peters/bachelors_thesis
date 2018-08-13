@@ -64,3 +64,132 @@
      \end{itemize}
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Activation Functions}
+  \begin{itemize}
+    \item Determine the ``activity''-level of a neuron based on the
+      summed and weighted inputs
+    \item Non-Linear
+      \begin{itemize}
+        \item Enables the network to model complex relations
+        \item Multiple linear functions collapse into just a single
+          linear function
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sigmoid Activation Function}
+  \begin{equation}
+    \phi(z) = \frac{1}{1 + e^{-\theta \cdot z}}
+  \end{equation}
+  \begin{itemize}
+    \item Transforms an input into a range between 0 and 1
+    \item \(\theta\) adjusts the sensitivity with respect to the input
+    \item Reduces the impact of outliers
+    \item Often used in the early days
+      \begin{itemize}
+        \item Biological inspiration, can also be interpreted as a ``firing-rate''
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sigmoid Activation Function}
+  \begin{figure}
+    \resizebox{.6\textwidth}{!}{\input{../figures/sigmoid_function}}
+    \caption{The sigmoid activation function plotted for different
+      values of \(\theta\).}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems with the Sigmoid Activation Function}
+  \begin{itemize}
+    \item We sometimes want to keep big values
+      \begin{itemize}
+        \item Small values tend to fade out in deep networks (many
+          hidden layers)
+      \end{itemize}
+    \item ``Saturates'' for very big or negative inputs, i.e. does
+      not change much when the input changes
+      \begin{itemize}
+        \item This leads to training problems as we shall see later
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ReLU Activation Function}
+  \begin{equation}
+    \phi(z) = \max(0, z)
+  \end{equation}
+  \begin{itemize}
+    \item Remedies the problems of the sigmoid function
+    \item Cuts away negative values \(\rightarrow\) sparsity among the
+      neuron activations
+      \begin{itemize}
+        \item Promotes simpler representations
+      \end{itemize}
+    \item Actually more biologically inspired than the sigmoid
+    \item Very easy to compute
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ReLU Activation Function}
+  \begin{figure}
+    \resizebox{.6\textwidth}{!}{\input{../figures/relu_function}}
+    \caption{The ReLU activation function.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Softmax Activation Function}
+  \begin{equation}
+    \phi(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{n}{e^{z_j}}}
+  \end{equation}
+  \begin{itemize}
+    \item Usually applied to the output neurons
+    \item Outputs can be interpreted as probabilities
+      \begin{itemize}
+        \item Useful in classification, every possible class gets a
+          probability
+      \end{itemize}
+    \item Using the exponential function before normalization
+      amplifies bigger signals and attenuates weaker ones
+      \begin{itemize}
+        \item Helpful in training
+      \end{itemize}
+    \item Interpretation of the \(z_i\): Unnormalized
+      log-probabilities
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Role of the Bias Value}
+  \begin{itemize}
+    \item The bias is added as a constant to the sum of the weighted
+      inputs in the summation unit
+    \item Acts like a threshold that has to be overcome
+      \begin{itemize}
+        \item Negative bias: Positive weighted inputs needed for the
+          neuron to become active
+        \item Positive bias: Negative weighted inputs needed to stop
+          the neuron from being active
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Role of the Bias Value}
+  \begin{figure}
+    \resizebox{.6\textwidth}{!}{\input{../figures/bias}}
+    \caption{The sigmoid activation function plotted for different bias values.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+
+\end{frame}

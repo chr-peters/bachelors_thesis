@@ -1,0 +1,64 @@
+\begin{frame}
+  \frametitle{The Role of the Bias Value}
+  \begin{itemize}
+    \item The bias is added as a constant to the sum of the weighted
+      inputs in the summation unit
+    \item Acts like a threshold that has to be overcome
+      \begin{itemize}
+        \item Negative bias: Positive weighted inputs needed for the
+          neuron to become active
+        \item Positive bias: Negative weighted inputs needed to stop
+          the neuron from being active
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Role of the Bias Value}
+  \begin{figure}
+    \resizebox{.6\textwidth}{!}{\input{../figures/bias}}
+    \caption{The sigmoid activation function plotted for different bias values.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation Metrics}
+  \begin{itemize}
+    \item \textbf{Accuracy:}
+      \begin{itemize}
+        \item Percentage of testing examples that were classified correctly
+      \end{itemize}
+      \begin{equation}
+        Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+      \end{equation}
+    \item \textbf{Precision:}
+      \begin{itemize}
+        \item Percentage of correctly classified examples among all
+          examples classified as positive
+      \end{itemize}
+      \begin{equation}
+        Precision = \frac{TP}{TP + FP}
+      \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation Metrics}
+  \begin{itemize}
+    \item \textbf{Recall:}
+      \begin{itemize}
+        \item What percentage of positive examples was classified
+          correctly?
+      \end{itemize}
+      \begin{equation}
+        Recall = \frac{TP}{TP + FN}
+      \end{equation}
+    \item \textbf{F1 Score:}
+      \begin{itemize}
+        \item Harmonic mean of precision and recall
+      \end{itemize}
+      \begin{equation}
+        \text{F1 Score} = \frac{2*Precision*Recall}{Precision+Recall}
+      \end{equation}
+  \end{itemize}
+\end{frame}

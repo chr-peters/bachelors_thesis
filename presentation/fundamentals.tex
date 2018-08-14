@@ -167,28 +167,28 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{The Role of the Bias Value}
-  \begin{itemize}
-    \item The bias is added as a constant to the sum of the weighted
-      inputs in the summation unit
-    \item Acts like a threshold that has to be overcome
-      \begin{itemize}
-        \item Negative bias: Positive weighted inputs needed for the
-          neuron to become active
-        \item Positive bias: Negative weighted inputs needed to stop
-          the neuron from being active
-      \end{itemize}
-  \end{itemize}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{The Role of the Bias Value}
+%%   \begin{itemize}
+%%     \item The bias is added as a constant to the sum of the weighted
+%%       inputs in the summation unit
+%%     \item Acts like a threshold that has to be overcome
+%%       \begin{itemize}
+%%         \item Negative bias: Positive weighted inputs needed for the
+%%           neuron to become active
+%%         \item Positive bias: Negative weighted inputs needed to stop
+%%           the neuron from being active
+%%       \end{itemize}
+%%   \end{itemize}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{The Role of the Bias Value}
-  \begin{figure}
-    \resizebox{.6\textwidth}{!}{\input{../figures/bias}}
-    \caption{The sigmoid activation function plotted for different bias values.}
-  \end{figure}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{The Role of the Bias Value}
+%%   \begin{figure}
+%%     \resizebox{.6\textwidth}{!}{\input{../figures/bias}}
+%%     \caption{The sigmoid activation function plotted for different bias values.}
+%%   \end{figure}
+%% \end{frame}
 
 \begin{frame}
   \frametitle{Neural Networks as Classifiers}
@@ -221,7 +221,7 @@
       \begin{itemize}
         \item Some new testing examples are presented to the
           classifier that it did not see during training
-        \item These examples are used to determine if the classifier
+        \item These examples are used to determine, if the classifier
           learned any useful concepts from the training data, i.e. to
           \textit{generalize}
       \end{itemize}
@@ -314,7 +314,7 @@
         \item Repeat this for a number of passes through the training
           data (one pass = one epoch)
       \end{itemize}
-    \item After training, validate the network on new examples
+    \item After training, test the network on new examples
       \begin{itemize}
         \item Compute evaluation metrics
         \item Was it able to \textit{generalize}?

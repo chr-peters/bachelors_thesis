@@ -295,3 +295,29 @@
       \end{equation}
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Training the Network}
+  \begin{itemize}
+    \item Which parameters can be adjusted during training?
+      \begin{itemize}
+        \item The weights and biases store the network's knowledge and
+          need to be tuned to improve performance
+        \item Other parameters like number of layers or activation
+          function are set in advance (hyperparameters)
+      \end{itemize}
+    \item How to adjust the weights and biases?
+      \begin{itemize}
+        \item Measure the error on a batch of training examples
+        \item Minimize the error by taking a step of \textit{gradient
+          descent}
+        \item Repeat this for a number of passes through the training
+          data (one pass = one epoch)
+      \end{itemize}
+    \item After training, validate the network on new examples
+      \begin{itemize}
+        \item Compute evaluation metrics
+        \item Was it able to \textit{generalize}?
+      \end{itemize}
+  \end{itemize}
+\end{frame}

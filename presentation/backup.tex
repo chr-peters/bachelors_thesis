@@ -112,3 +112,147 @@
       \end{equation}
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Dead Wire Classifier}
+  \begin{itemize}
+  \item Accuracy: 97.61\%
+  \item Precision: 99.96\%
+  \item Recall: 95.65\%
+  \item F-Measure: 97.76\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Dead Wire\\(Predicted)} & \thead{No Dead Wire\\(Predicted)} \\
+    \hline
+    \thead{Dead Wire\\(Actual)} & 5212 & 237\\
+    \hline
+    \thead{No Dead Wire\\(Actual)} & 2 & 4549\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the dead wire classifier.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dead Pin Classifier}
+  \begin{itemize}
+  \item Accuracy: 99.95\%
+  \item Precision: 99.92\%
+  \item Recall: 99.98\%
+  \item F-Measure: 99.95\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Dead Pin\\(Predicted)} & \thead{No Dead Pin\\(Predicted)} \\
+    \hline
+    \thead{Dead Pin\\(Actual)} & 4739 & 1\\
+    \hline
+    \thead{No Dead Pin\\(Actual)} & 4 & 5256\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the dead pin classifier.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dead Connector Classifier}
+  \begin{itemize}
+  \item Accuracy: 98.77\%
+  \item Precision: 99.23\%
+  \item Recall: 95.69\%
+  \item F-Measure: 97.43\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Dead Connector\\(Predicted)} & \thead{No Dead Connector\\(Predicted)} \\
+    \hline
+    \thead{Dead Connector\\(Actual)} & 2334 & 105\\
+    \hline
+    \thead{No Dead Connector\\(Actual)} & 18 & 7543\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the dead connector classifier.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dead Fuse Classifier}
+  \begin{itemize}
+  \item Accuracy: 98.95\%
+  \item Precision: 97.32\%
+  \item Recall: 98.20\%
+  \item F-Measure: 97.76\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Dead Fuse\\(Predicted)} & \thead{No Dead Fuse\\(Predicted)} \\
+    \hline
+    \thead{Dead Fuse\\(Actual)} & 2288 & 42\\
+    \hline
+    \thead{No Dead Fuse\\(Actual)} & 63 & 7607\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the dead fuse classifier.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dead Channel Classifier}
+  \begin{itemize}
+  \item Accuracy: 99.11\%
+  \item Precision: 98.84\%
+  \item Recall: 98.64\%
+  \item F-Measure: 98.74\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Dead Channel\\(Predicted)} & \thead{No Dead Channel\\(Predicted)} \\
+    \hline
+    \thead{Dead Channel\\(Actual)} & 3493 & 48\\
+    \hline
+    \thead{No Dead Channel\\(Actual)} & 41 & 6418\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the dead channel classifier.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hot Wire Classifier}
+  \begin{itemize}
+  \item Accuracy: 100.00\%
+  \item Precision: 100.00\%
+  \item Recall: 100.00\%
+  \item F-Measure: 100.00\%
+\end{itemize}
+\begin{table}[h]
+  \centering
+  \renewcommand\theadfont{\bfseries}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & \thead{Hot Wire\\(Predicted)} & \thead{No Hot Wire\\(Predicted)} \\
+    \hline
+    \thead{Hot Wire\\(Actual)} & 5532 & 0\\
+    \hline
+    \thead{No Hot Wire\\(Actual)} & 0 & 4468\\
+    \hline
+  \end{tabular}
+  \caption{Confusion matrix of the hot wire classifier.}
+\end{table}
+\end{frame}
